@@ -344,7 +344,7 @@ export default {
     },
   },
   created() {
-    // this.getList()
+    this.getList()
     this.getReference()
     this.getData()
     this.getRelationData()
@@ -372,6 +372,7 @@ export default {
         .then((response) => {
           // console.log(response)
           const { data } = response
+          console.log(data);
           data.forEach((e) => {
             let document_id = e.document_id
             let document_type = e.document_type

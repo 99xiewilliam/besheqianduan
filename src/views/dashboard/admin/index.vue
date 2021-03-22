@@ -11,12 +11,12 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart />
+          <pie-chart />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart />
+          <raddar-chart />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -213,13 +213,13 @@ export default {
   }
 
   .box-card {
-    width: 300px;
-    height: 500px;
+    width: 100%;
+    height: 600px;
   }
 
   .box-card1 {
-    width: 600px;
-    height: 500px;
+    width: 100%;
+    height: 600px;
   }
 
   .box-upload {
@@ -231,6 +231,10 @@ export default {
     overflow-y: auto;
   }
 }
+
+
+
+
 
 @media (max-width:1024px) {
   .chart-wrapper {

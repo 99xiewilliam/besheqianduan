@@ -62,7 +62,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['文献', '医学书籍', '指南', '药品说明书', '诊断报告', '文本'],
           axisTick: {
             alignWithLabel: true
           }
@@ -74,25 +74,18 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '已标注',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: [79, 52, 200, 334, 390, 330],
           animationDuration
         }, {
-          name: 'pageB',
+          name: '未标注',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          data: [80, 52, 200, 334, 390, 330],
           animationDuration
         }]
       })

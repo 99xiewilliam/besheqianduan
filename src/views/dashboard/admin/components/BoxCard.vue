@@ -1,26 +1,28 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
-      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
+      <img src="./covid-5247929_640.png">
     </div>
     <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb" />
-      <mallki class-name="mallki-text" text="vue-element-admin" />
-      <div style="padding-top:35px;" class="progress-item">
-        <span>Vue</span>
-        <el-progress :percentage="70" />
-      </div>
-      <div class="progress-item">
+      <!-- <pan-thumb :image="avatar" class="panThumb" /> -->
+      <mallki class-name="mallki-text" text="各种类已标注情况" />
+      <!-- <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;"> -->
+        <div style="padding-top:10px;" class="progress-item" v-for="(item, index) in options" :key="index">
+          <span>{{item.name}}</span>
+          <el-progress :percentage="item.percentage" />
+        </div>
+      <!-- </el-scrollbar> -->
+      <!-- <div class="progress-item">
         <span>JavaScript</span>
         <el-progress :percentage="18" />
       </div>
       <div class="progress-item">
         <span>CSS</span>
         <el-progress :percentage="12" />
-      </div>
-      <div class="progress-item">
-        <span>ESLint</span>
-        <el-progress :percentage="100" status="success" />
+      </div> -->
+      <div class="progress-item" style="padding-top:30px;">
+        <span>已标注总情况</span>
+        <el-progress :percentage="66" />
       </div>
     </div>
   </el-card>
@@ -48,7 +50,33 @@ export default {
       statisticsData: {
         article_count: 1024,
         pageviews_count: 1024
-      }
+      },
+      options:[
+        {
+          name: '文献',
+          percentage: 40
+        },
+        {
+          name: '医学书籍',
+          percentage: 40
+        },
+        {
+          name: '指南',
+          percentage: 40
+        },
+        {
+          name: '药品说明书',
+          percentage: 40
+        },
+        {
+          name: '诊断报告',
+          percentage: 40
+        },
+        {
+          name: '文本',
+          percentage: 20
+        }
+      ]
     }
   },
   computed: {

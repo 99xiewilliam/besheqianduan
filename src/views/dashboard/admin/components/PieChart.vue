@@ -52,7 +52,7 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: ['文献', '医学书籍', '指南', '药品说明书', '诊断报告', '文本']
         },
         series: [
           {
@@ -62,11 +62,12 @@ export default {
             radius: [15, 95],
             center: ['50%', '38%'],
             data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
+              { value: 320, name: '文献' },
+              { value: 240, name: '医学书籍' },
+              { value: 149, name: '指南' },
+              { value: 100, name: '药品说明书' },
+              { value: 59, name: '诊断报告' },
+              { value: 39, name: '文本' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600
