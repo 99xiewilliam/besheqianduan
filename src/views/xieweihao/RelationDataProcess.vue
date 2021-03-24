@@ -14,14 +14,13 @@
         <el-container>
           <div class="div1">当前关系类型:</div>
           <el-select v-model="value_option2" placeholder="请选择活动区域" @change="handleChange($event)">
-              <el-option
-                v-for="item in options2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+            <el-option
+              v-for="item in options2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-container>
         <el-container class="mydiv2">
           <el-button type="primary" class="inRight" @click="addOneEntity()">单条添加</el-button>
@@ -39,27 +38,24 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="起始实体：" :label-width="formLabelWidth">
             <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="目标实体：" :label-width="formLabelWidth">
             <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-    
+
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false" type="danger">取 消</el-button>
-          <el-button type="success" @click="dialogFormVisible = false" >确 定</el-button>
+          <el-button type="danger" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="success" @click="dialogFormVisible = false">确 定</el-button>
         </div>
       </el-dialog>
 
@@ -67,60 +63,58 @@
         <el-form :model="form">
           <el-form-item label="" :label-width="formLabelWidth">
             <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="起始实体：" :label-width="formLabelWidth">
-            <el-input placeholder="请输入疾病" size="mini"></el-input>
+            <el-input placeholder="请输入疾病" size="mini" />
           </el-form-item>
           <el-form-item label="目标实体：" :label-width="formLabelWidth">
-            <el-input placeholder="请输入疾病" size="mini"></el-input>
+            <el-input placeholder="请输入疾病" size="mini" />
           </el-form-item>
           <el-form-item label="建议：" :label-width="formLabelWidth">
             <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="证据级别：" :label-width="formLabelWidth">
-            <el-input placeholder="请输入证据级别" size="mini"></el-input>
+            <el-input placeholder="请输入证据级别" size="mini" />
           </el-form-item>
           <el-form-item label="临床依据：" :label-width="formLabelWidth">
-            <el-input placeholder="请输入临床依据" size="mini"></el-input>
+            <el-input placeholder="请输入临床依据" size="mini" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible1 = false" type="danger">取 消</el-button>
-          <el-button type="success" @click="dialogFormVisible1 = false" >确 定</el-button>
+          <el-button type="danger" @click="dialogFormVisible1 = false">取 消</el-button>
+          <el-button type="success" @click="dialogFormVisible1 = false">确 定</el-button>
         </div>
       </el-dialog>
       <el-drawer
         title="新建关系"
         :visible.sync="drawer"
         :direction="direction"
-        :before-close="handleClose">
+        :before-close="handleClose"
+      >
         <div>
           <span>当前选中的起点实体：</span>
           <span>实体类型</span>
-          <span></span>
+          <span />
         </div>
         <div>
           <span>实体ID</span>
-          <span></span>
+          <span />
         </div>
         <div>
           <span>属性摘要</span>
-          <span></span>
+          <span />
         </div>
-        <el-divider></el-divider>
+        <el-divider />
         <div>
           <span>终点实体配置：</span>
           <span>类型</span>
           <span>
             <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </span>
         </div>
@@ -128,22 +122,21 @@
           <span>
             实体ID
           </span>
-          <span></span>
+          <span />
         </div>
         <div>
           <span>
             属性摘要
           </span>
-          <span></span>
+          <span />
         </div>
-        <el-divider></el-divider>
+        <el-divider />
         <div>
           <span>
             实体关系配置
           </span>
           <el-select v-model="value" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
         <div style="text-align: center;height:60px;">
@@ -157,11 +150,11 @@
       </el-drawer>
       <div class="margin">
         <el-autocomplete
-        v-model="state"
-        :fetch-suggestions="querySearchAsync"
-        placeholder="请输入内容"
-        @select="handleSelect"
-      ></el-autocomplete>
+          v-model="state"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入内容"
+          @select="handleSelect"
+        />
         <el-button style="margin-bottom:20px;margin-left:20px;" type="primary">
           搜索
         </el-button>
@@ -202,20 +195,19 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="180">
-          <a @click="js_method()" style="text-decoration:underline; color: blue;">编辑</a>
+          <a style="text-decoration:underline; color: blue;" @click="js_method()">编辑</a>
         </el-table-column>
       </el-table>
       <el-pagination
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="list.length"
-      :page-size="pagesize"
-      :current-page="currentPage"
-      :page-sizes="[1, 2, 5, 10]"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    >
-    </el-pagination>
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="list.length"
+        :page-size="pagesize"
+        :current-page="currentPage"
+        :page-sizes="[1, 2, 5, 10]"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </el-container>
   </div>
 </template>
@@ -257,19 +249,19 @@ export default {
       value_option1: '',
       value_option2: '',
       value: '',
-      state: "",
+      state: '',
       dialogFormVisible: false,
       dialogFormVisible1: false,
       form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
       formLabelWidth: '120px',
       drawer: false,
       direction: 'rtl',
@@ -286,8 +278,8 @@ export default {
           (this.currentPage - 1) * this.pagesize,
           this.currentPage * this.pagesize
         ) || []
-      );
-    },
+      )
+    }
   },
   created() {
     // this.getList()
@@ -309,6 +301,7 @@ export default {
         this.setSort()
       })
     },
+    // 获取标注数据
     getReference() {
       const url = 'http://localhost:10088/FileMarks/getFileMark'
       this.listLoading = true
@@ -317,20 +310,20 @@ export default {
           const { data } = response
           let count = 0
           data.forEach((e) => {
-            let document_id = e.document_id
-            let document_type = e.document_type
+            const document_id = e.document_id
+            const document_type = e.document_type
             this.document_type = e.document_type
             e.relation_marks.forEach((f) => {
-              let start_type = f.start_type
-              let relation_type = f.relation_type
-              let end_type = f.end_type
+              const start_type = f.start_type
+              const relation_type = f.relation_type
+              const end_type = f.end_type
               f.relations.forEach((g) => {
                 count = count + 1
-                let item = {document_id: document_id, document_type: document_type, id: count,
-            start_type: start_type, relation_type: relation_type, end_type: end_type, 
-            start_object: g.start_object, end_object: g.end_object, advice: g.advice, 
-            evi_level: g.evi_level, evi_describe: g.evi_describe, group: g.group}
-                
+                const item = { document_id: document_id, document_type: document_type, id: count,
+                  start_type: start_type, relation_type: relation_type, end_type: end_type,
+                  start_object: g.start_object, end_object: g.end_object, advice: g.advice,
+                  evi_level: g.evi_level, evi_describe: g.evi_describe, group: g.group }
+
                 this.list.push(item)
                 this.list1.push(item)
               })
@@ -344,13 +337,14 @@ export default {
           })
         })
     },
+    // 获取后台实体数据并转成当前耶页面需要的形式
     getData() {
-      const url = "http://localhost:10088/Entities/entity";
+      const url = 'http://localhost:10088/Entities/entity'
       axios.get(url).then((response) => {
         console.log(response.data)
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             value: '',
             label: ''
           }
@@ -358,16 +352,17 @@ export default {
           a.label = datas[data].name
           this.options.push(a)
         }
-        console.log(this.options);
+        console.log(this.options)
       })
     },
+    // 获取关系数据类型
     getData2() {
-      const url = "http://localhost:10088/Relations/relation";
+      const url = 'http://localhost:10088/Relations/relation'
       axios.get(url).then((response) => {
         console.log(response.data)
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             value: '药品分类-适应症-疾病',
             label: '药品分类-适应症-疾病'
           }
@@ -376,7 +371,7 @@ export default {
           this.options1.push(a)
           this.options2.push(a)
         }
-      });
+      })
     },
     getRowKey(row) {
       return row.id.counter
@@ -387,74 +382,80 @@ export default {
     js_method1() {
       this.drawer = true
     },
+    // 搜索相关代码
     querySearchAsync(queryString, cb) {
-      var search_data = this.list;
-      console.log(queryString);
+      var search_data = this.list
+      console.log(queryString)
       this.results = queryString
         ? search_data.filter(this.createStateFilter(queryString))
-        : search_data;
-      console.log(this.results);
+        : search_data
+      console.log(this.results)
 
-      const list = [];
-      for (let result of this.results) {
-        list.push({ value: result.title });
+      const list = []
+      for (const result of this.results) {
+        list.push({ value: result.title })
       }
 
-      clearTimeout(this.timeout);
+      clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         if (list.length !== this.list.length) {
-          cb(list);
+          cb(list)
         } else {
-          cb([]);
+          cb([])
         }
-      }, 3000 * Math.random());
+      }, 3000 * Math.random())
     },
+    // 搜索相关代码
     createStateFilter(queryString) {
       return (state) => {
         console.log(
           state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
+        )
 
         return (
           state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
+        )
+      }
     },
+    // 搜索相关代码
     handleSelect(item) {
-      console.log(item);
+      console.log(item)
       // this.list = this.results;
       // this.nowTable;
     },
+    // 搜索相关代码
     handleChange(e) {
       console.log(e)
-      this.list = this.list1;
+      this.list = this.list1
       this.list = this.list.filter((data) => {
-          return data.start_type + '-' + data.relation_type + '-' + data.end_type === e;
-        });
+        return data.start_type + '-' + data.relation_type + '-' + data.end_type === e
+      })
     },
     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
     },
-    handleSizeChange: function (size) {
-      this.pagesize = size;
+    handleSizeChange: function(size) {
+      this.pagesize = size
     },
-    handleCurrentChange: function (currentPage) {
-      this.currentPage = currentPage;
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage
     },
     handleClick() {
       this.$router.push({
         path: '/xieweihao/Expert_input',
         query: {
         }
-      });
+      })
     },
+    // 让form表单显现出来
     addOneEntity() {
       this.dialogFormVisible1 = true
     },
+    // 获取当前时间
     getTime() {
       /*eslint no-extend-native: ["error", { "exceptions": ["Date"] }]*/
       Date.prototype.Format = function(fmt) {
@@ -494,7 +495,7 @@ export default {
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
-        },
+        }
       })
     }
   }

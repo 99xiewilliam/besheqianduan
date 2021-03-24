@@ -1,15 +1,13 @@
 <template>
   <div class="app-container">
-    <!-- Note that row-key is necessary to get a correct row order. -->
-    <!-- <el-input placeholder="请输入关键字搜索" style="width:280px;" prefix-icon="el-icon-document" /> -->
     <el-button style="margin-bottom:20px;" type="primary" icon="el-icon-document" @click="dialogFormVisible = true">
       添加标注任务
     </el-button>
     <el-dialog title="添加标注任务" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="项目名称">
-          <el-input v-model="form.name" autocomplete="off" placeholder="请输入项目名称"></el-input>
-          <el-input v-model="form.col_name" autocomplete="off" placeholder="请输入项目数据库名称"></el-input>
+          <el-input v-model="form.name" autocomplete="off" placeholder="请输入项目名称" />
+          <el-input v-model="form.col_name" autocomplete="off" placeholder="请输入项目数据库名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -17,7 +15,7 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
-
+    <!-- 表格 -->
     <el-table ref="dragTable" v-loading="listLoading" :data="nowTableData" :row-key="getRowKey" fit style="width: 100%">
       <el-table-column label="项目名称">
         <template slot-scope="{row}">
@@ -74,8 +72,8 @@
       :current-page="currentPage"
       :page-sizes="[1, 2, 5, 10]"
       @size-change="handleSizeChange"
-      @current-change="handleCurrentChange">
-    </el-pagination>
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -130,24 +128,11 @@ export default {
       },
       pagesize: 1,
       currentPage: 1
-      // props: {
-      //   info: {
-      //     type: Object,
-      //     default: () => {
-      //       retur {}
-      //     }
-      //   },
-      //   layerid: {
-      //     type: String,
-      //     default: ''
-      //   },
-      //   lydata: {
-      //     type: Object,
-      //     default: () => {
-      //       return {}
-      //     }
-      //   }
-      // }
+    }
+  },
+  computed: {
+    nowTableData() {
+      return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize) || []
     }
   },
   watch: {
@@ -159,11 +144,6 @@ export default {
     // this.getList()
     // this.getReference()
     this.getItems()
-  },
-  computed: {
-    nowTableData() {
-      return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize) || []
-    }
   },
   methods: {
     async getList() {
@@ -195,15 +175,9 @@ export default {
         .then((response) => {
           const { data } = response
           console.log(data)
-          // this.list = data
-          // this.listLoading = false
-          // this.oldList = this.list.map(v => v.id)
-          // this.newList = this.oldList.slice()
-          // this.$nextTick(() => {
-          //   this.setSort()
-          // })
         })
     },
+    // 获取后台数据
     getItems() {
       const url = 'http://localhost:10088/Item/getAll'
       this.listLoading = true
@@ -234,6 +208,7 @@ export default {
     //     shadeClose: false
     //   })
     // },
+    // 添加文本类型
     addItem() {
       this.saveData.name = this.form.name
       this.saveData.col_name = this.form.col_name
@@ -250,6 +225,7 @@ export default {
         console.log(error)
       })
     },
+    // 转到下一层界面
     switchToPage(coll_name) {
       console.log(coll_name)
       this.$router.push({
@@ -259,6 +235,7 @@ export default {
         }
       })
     },
+    // 获取时间
     getTime() {
       /*eslint no-extend-native: ["error", { "exceptions": ["Date"] }]*/
       Date.prototype.Format = function(fmt) {

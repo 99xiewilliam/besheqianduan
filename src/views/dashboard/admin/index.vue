@@ -36,8 +36,8 @@
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value">
-              </el-option>
+                :value="item.value"
+              />
             </el-select>
             <el-button type="primary" round>保存数据</el-button>
             <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
@@ -46,10 +46,10 @@
           </div>
         </el-card>
       </el-col>
-      
+
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
         <!-- <todo-list /> -->
-        
+
         <el-card class="box-card">
           <el-scrollbar style="height:50%" wrap-style="overflow-x:hidden;">
             <div class="box-upload">
@@ -64,7 +64,7 @@
                 list-type="picture"
                 accept=".png, .jpg"
                 :before-upload="beforeUpload"
-                >
+              >
                 <el-button size="small" type="primary">点击上传</el-button>
                 <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
               </el-upload>
@@ -86,11 +86,11 @@ import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
-import TodoList from './components/TodoList'
+// import TransactionTable from './components/TransactionTable'
+// import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
-import axios from "axios";
-import language from '@/components/ImageCropper/utils/language'
+import axios from 'axios'
+// import language from '@/components/ImageCropper/utils/language'
 
 const lineChartData = {
   newVisitis: {
@@ -120,8 +120,8 @@ export default {
     RaddarChart,
     PieChart,
     BarChart,
-    TransactionTable,
-    TodoList,
+    // TransactionTable,
+    // TodoList,
     BoxCard
   },
   data() {
@@ -150,20 +150,20 @@ export default {
       this.lineChartData = lineChartData[type]
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
     handlePreview(file) {
-      console.log(file);
+      console.log(file)
     },
     handleSuccess(res, file) {
-      console.log(res);
-      this.targetText = res;
-
+      console.log(res)
+      this.targetText = res
     },
+    // 调整语言
     handleChange(e) {
-      this.Ocr.language = e;
+      this.Ocr.language = e
       console.log(this.Ocr)
-      const url = 'http://localhost:10088/Upload/setLanguage';
+      const url = 'http://localhost:10088/Upload/setLanguage'
       axios.post(url, this.Ocr).then((response) => {
         console.log(response)
       })
@@ -231,10 +231,6 @@ export default {
     overflow-y: auto;
   }
 }
-
-
-
-
 
 @media (max-width:1024px) {
   .chart-wrapper {

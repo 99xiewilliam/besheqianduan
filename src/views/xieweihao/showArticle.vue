@@ -4,11 +4,11 @@
       class="el-icon-back"
       style="weight: 1000; cursor: pointer"
       @click="routeBack()"
-    ></i>
+    />
     <aside>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="实体标注" name="first"></el-tab-pane>
-        <el-tab-pane label="关系标注" name="second"></el-tab-pane>
+        <el-tab-pane label="实体标注" name="first" />
+        <el-tab-pane label="关系标注" name="second" />
       </el-tabs>
     </aside>
 
@@ -18,19 +18,19 @@
         <el-card class="box-card">
           <div class="content-container">
             <xmp id="content-area" class="content-area" @mouseup="handleSelect">
-                <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
-                  {{ targetText }}
-                </el-scrollbar>
-              </xmp>
+              <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
+              {{ targetText }}
+              </el-scrollbar>
+            </xmp>
             <span id="mark-area" class="mark-area transparent">
               <el-scrollbar
                 style="height: 100%"
                 wrap-style="overflow-x:hidden;"
               >
                 <span
-                  class="transparent"
                   v-for="(char, index) in targetTextArr"
                   :key="index"
+                  class="transparent"
                 >
                   <span :id="`token_${index}`">{{ char }}</span>
                 </span>
@@ -47,60 +47,60 @@
               :fetch-suggestions="querySearchAsync"
               placeholder="请输入内容"
               @select="handleSelect1"
-            ></el-autocomplete>
+            />
             <el-button class="right" @click="handleSkip">不合格</el-button>
-            <el-button type="primary" class="right" @click="addFileMark()"
-              >提交</el-button
-            >
+            <el-button
+              type="primary"
+              class="right"
+              @click="addFileMark()"
+            >提交</el-button>
             <el-button class="right" @click="handleSkip">下一篇</el-button>
           </div>
           <el-scrollbar
-                style="height: 100%"
-                wrap-style="overflow-x:hidden;"
+            style="height: 100%"
+            wrap-style="overflow-x:hidden;"
           >
             <div class="entity-area">
               <li
-                class="sublabelListArea"
                 v-for="(label, index) in labels"
-                v-bind:key="index"
-              
+                :key="index"
+                class="sublabelListArea"
               >
                 <div class="labelBlock">
-                  <div @click="handleFold(index)" class="entity-bar">
-                    <div :class="`inline point dot-color-${label.color}`"></div>
+                  <div class="entity-bar" @click="handleFold(index)">
+                    <div :class="`inline point dot-color-${label.color}`" />
                     <span class="labelname">{{ label.labelname }}</span>
                     <i
                       v-if="!noShowList[index]"
                       class="right inline el-icon-caret-bottom"
-                    ></i>
+                    />
                     <i
                       v-if="noShowList[index]"
                       class="right inline el-icon-caret-left"
-                    ></i>
+                    />
                     <el-checkbox
+                      v-model="entitylist[index]"
                       class="right inline"
                       type="warning"
                       size="small"
-                      v-model="entitylist[index]"
                       label="连续标注模式"
                       border
                       @change="(value) => handleContinuousChange(value, index)"
-                    ></el-checkbox>
+                    />
                     <el-button
                       class="right inline"
                       type="primary"
                       icon="el-icon-circle-plus-outline"
                       size="small"
                       @click="handleSingleAdd(index)"
-                      >添加标注</el-button
-                    >
+                    >添加标注</el-button>
                   </div>
 
-                  <div class="entity-block-area" v-if="!noShowList[index]">
+                  <div v-if="!noShowList[index]" class="entity-block-area">
                     <div margin-bottom="10px">{{ label.labeldescribe }}</div>
                     <li
                       v-for="(entity, entityIndex) in label.entitylist"
-                      v-bind:key="entityIndex"
+                      :key="entityIndex"
                     >
                       <div
                         class="test-entity-block"
@@ -120,7 +120,7 @@
                           size="mini"
                           type="danger"
                           @click="removeEntity(index, entityIndex)"
-                        ></el-button>
+                        />
                       </div>
                     </li>
                   </div>
@@ -135,11 +135,11 @@
 </template>
 
 <script>
-import splitPane from "vue-splitpane";
-import axios from "axios";
+import splitPane from 'vue-splitpane'
+import axios from 'axios'
 
 export default {
-  name: "SplitpaneDemo",
+  name: 'SplitpaneDemo',
   components: { splitPane },
   data() {
     return {
@@ -151,16 +151,16 @@ export default {
       src: this.$route.query.src,
       summary: this.$route.query.summary,
       keywords: this.$route.query.keywords,
-      activeName: "first",
+      activeName: 'first',
       labels: [
-        
+
       ],
       labels1: [
-        
+
       ],
       entitylist: [],
       // 文档部分
-      targetText: " ",
+      targetText: ' ',
       targetTextArr: [],
       // 页面配置和状态部分
       curindex: 0, // 当前文档
@@ -176,7 +176,7 @@ export default {
         document_type: this.$route.query.document_type,
         type: '',
         object_marks: [
-          
+
         ],
         relation_marks: [
           {
@@ -184,7 +184,7 @@ export default {
             start_type: '',
             relation_type: '',
             end_type: '',
-            relations:[
+            relations: [
               {
                 start_object: '',
                 end_object: '',
@@ -215,14 +215,7 @@ export default {
       },
       fileMarkS: [],
       relationOptions: []
-    };
-  },
-  mounted() {
-    this.getData()
-    this.getRelationChoice()
-    this.$nextTick(() => {
-      this.getAnnotate();
-    })
+    }
   },
   // watch: {
   //   $route(to, from) {
@@ -230,41 +223,49 @@ export default {
   //   },
   // },
   computed: {
-  
+
+  },
+  mounted() {
+    this.getData()
+    this.getRelationChoice()
+    this.$nextTick(() => {
+      this.getAnnotate()
+    })
   },
   created() {
-    //this.getData()
+    // this.getData()
   },
   methods: {
+    // 获取后台文章的摘要等信息
     getData() {
       this.targetText =
-        "摘要：" +
+        '摘要：' +
         this.summary +
-        "\n\n" +
-        "关键字：" +
+        '\n\n' +
+        '关键字：' +
         this.keywords +
-        "\n\n" +
-        "作者：" +
+        '\n\n' +
+        '作者：' +
         this.author +
-        "\n\n" +
-        "时间：" +
+        '\n\n' +
+        '时间：' +
         this.date +
-        "\n\n" +
-        "期刊：" +
+        '\n\n' +
+        '期刊：' +
         this.journal +
-        "\n\n" +
-        "知识来源：" +
-        this.src;
-      document.getElementById("content-area").innerHTML = this.targetText;
-      this.targetTextArr = this.targetText.split("");
-      const url = "http://localhost:10088/Entities/entity";
+        '\n\n' +
+        '知识来源：' +
+        this.src
+      document.getElementById('content-area').innerHTML = this.targetText
+      this.targetTextArr = this.targetText.split('')
+      const url = 'http://localhost:10088/Entities/entity'
       axios.get(url).then((response) => {
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             color: 1,
-            labelname: "藥品名",
-            entitylist: [],
+            labelname: '藥品名',
+            entitylist: []
           }
           a.color = parseInt(data)
           a.color = a.color + 1
@@ -273,23 +274,24 @@ export default {
         }
         // this.labels = data;
         this.labels1 = this.labels
-        for(var i = 0; i < this.labels.length; i++) {
+        for (var i = 0; i < this.labels.length; i++) {
           this.shows.push(true)
         }
-      });
+      })
     },
     resize() {
-      console.log("resize");
+      console.log('resize')
     },
+    // 跳转到关系标注页面
     handleClick(tab, event) {
-      console.log(tab, event);
-      console.log(tab.$options.propsData.label);
+      console.log(tab, event)
+      console.log(tab.$options.propsData.label)
       console.log('到关系')
       console.log(this.$route.query.document_type)
-      if (tab.$options.propsData.label === "关系标注") {
+      if (tab.$options.propsData.label === '关系标注') {
         this.$router.push({
           path:
-            "/xieweihao/Document_information_extraction/Paper/anotationRelation",
+            '/xieweihao/Document_information_extraction/Paper/anotationRelation',
           query: {
             title: this.title,
             author: this.author,
@@ -300,13 +302,13 @@ export default {
             keywords: this.keywords,
             document_id: this.id,
             document_type: this.$route.query.document_type
-          },
-        });
+          }
+        })
       }
     },
     handleFold(index) {
-      this.noShowList[index] = !this.noShowList[index];
-      this.$forceUpdate();
+      this.noShowList[index] = !this.noShowList[index]
+      this.$forceUpdate()
     },
     // 将标注结果同步到实体背景色中
     syncResult() {
@@ -315,44 +317,44 @@ export default {
           this.addColor(
             i,
             this.labels[i].entitylist[j].start,
-            this.labels[i].entitylist[j].end,
-          );
+            this.labels[i].entitylist[j].end
+          )
         }
       }
     },
     // 获取标注结果
     getAnnotate() {
       // this.labels = JSON.parse(this.datalist[this.curindex].result);
-      this.syncResult();
+      this.syncResult()
     },
     // 单个实体添加模式
     handleSingleAdd(index) {
-      var self = this;
-      var selection = window.getSelection();
-      this.curMarkLabel = index;
-      this.continuousMark = false;
-      this.noShowList[index] = !this.noShowList[index]; // Undo Extra Show Action
-      console.log(this.noShowList[index]);
+      var self = this
+      var selection = window.getSelection()
+      this.curMarkLabel = index
+      this.continuousMark = false
+      this.noShowList[index] = !this.noShowList[index] // Undo Extra Show Action
+      console.log(this.noShowList[index])
       if (
         !selection.isCollapsed &&
-        selection.focusNode.parentElement.className === "content-area" &&
-        selection.anchorNode.parentElement.className === "content-area"
+        selection.focusNode.parentElement.className === 'content-area' &&
+        selection.anchorNode.parentElement.className === 'content-area'
       ) {
         // 进行标记
-        var start = selection.focusOffset;
-        var end = selection.anchorOffset;
+        var start = selection.focusOffset
+        var end = selection.anchorOffset
         if (start > end) {
-          var tmp = start;
-          start = end;
-          end = tmp;
+          var tmp = start
+          start = end
+          end = tmp
         }
-        self.addEntity(self.curMarkLabel, start, end);
-        window.getSelection().removeAllRanges();
+        self.addEntity(self.curMarkLabel, start, end)
+        window.getSelection().removeAllRanges()
         // 后处理
         if (!self.continuousMark) {
-          self.curMarkLabel = -1;
+          self.curMarkLabel = -1
         }
-      }else{
+      } else {
         console.log('heme')
       }
     },
@@ -362,30 +364,30 @@ export default {
         if (value === this.continuousMark && this.curMarkLabel !== index) {
           // 保持连续标注模式，当前标签更改
           for (var i in this.entitylist) {
-            this.entitylist[i] = false;
+            this.entitylist[i] = false
           }
-          this.entitylist[index] = true;
-          this.curMarkLabel = index;
+          this.entitylist[index] = true
+          this.curMarkLabel = index
         } else if (value !== this.continuousMark) {
           // 进入连续标注模式
-          this.continuousMark = true;
-          this.curMarkLabel = index;
+          this.continuousMark = true
+          this.curMarkLabel = index
         }
       } else {
         // 退出连续标注模式
-        this.continuousMark = false;
-        this.curMarkLabel = -1;
+        this.continuousMark = false
+        this.curMarkLabel = -1
       }
     },
     // 高亮悬停实体 实体抽取和关系抽取可以复用
     handleEntityMouseOver(entity) {
-      var fixPos = document.documentElement.scrollTop;
-      document.getElementById("token_" + entity.start).scrollIntoView(false);
-      document.documentElement.scrollTop = fixPos;
+      var fixPos = document.documentElement.scrollTop
+      document.getElementById('token_' + entity.start).scrollIntoView(false)
+      document.documentElement.scrollTop = fixPos
       // Add highlight class to entity
       for (var i = entity.start; i < entity.end; i++) {
-        document.getElementById("token_" + i).className =
-          document.getElementById("token_" + i).className + "highlight-color";
+        document.getElementById('token_' + i).className =
+          document.getElementById('token_' + i).className + 'highlight-color'
       }
     },
     // 取消高亮 实体抽取和关系抽取可以复用
@@ -393,159 +395,161 @@ export default {
       // Remove highlight class from entity
       for (var i = entity.start; i < entity.end; i++) {
         document.getElementById(
-          "token_" + i
+          'token_' + i
         ).className = document
-          .getElementById("token_" + i)
-          .className.replace("highlight-color", "");
+          .getElementById('token_' + i)
+          .className.replace('highlight-color', '')
       }
     },
     // 向lables数组添加实体同时为实体添加背景色 实体抽取和关系抽取 可以部分复用的函数
     addEntity(labelIndex, start, end) {
-    
       // Add Entity, Add Mark
       var node = {
         start: start,
         end: end,
         text: this.targetText.substr(start, end - start)
-      
-      };
-    
-      this.labels[labelIndex].entitylist.push(node);
-      this.$forceUpdate(); // 嵌套数组更新没有监听到，强制更新数据
-      this.addColor(labelIndex, start, end);
+
+      }
+
+      this.labels[labelIndex].entitylist.push(node)
+      this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
+      this.addColor(labelIndex, start, end)
     },
     // 为实体添加背景色
     addColor(labelIndex, start, end) {
       for (var i = start; i < end; i++) {
-        document.getElementById("token_" + i).className =
-          document.getElementById("token_" + i).className +
-          "dot-color-" +
+        document.getElementById('token_' + i).className =
+          document.getElementById('token_' + i).className +
+          'dot-color-' +
           this.labels[labelIndex].color +
-          " ";
+          ' '
       }
     },
     // 从labels中移除实体，去除背景色 不能复用的函数，但是实体抽取和关系抽取可以相互参考
     removeEntity(labelIndex, entityIndex) {
       // Remove Entity, Remove Mark
-      var start = this.labels[labelIndex].entitylist[entityIndex].start;
-      var end = this.labels[labelIndex].entitylist[entityIndex].end;
+      var start = this.labels[labelIndex].entitylist[entityIndex].start
+      var end = this.labels[labelIndex].entitylist[entityIndex].end
       for (var i = start; i < end; i++) {
-        var raw = document.getElementById("token_" + i).className;
-        var target = "dot-color-" + this.labels[labelIndex].color + " ";
+        var raw = document.getElementById('token_' + i).className
+        var target = 'dot-color-' + this.labels[labelIndex].color + ' '
         // 移除实体颜色
-        document.getElementById("token_" + i).className = raw.replace(
+        document.getElementById('token_' + i).className = raw.replace(
           target,
-          ""
-        );
+          ''
+        )
         // 移除高亮
         document.getElementById(
-          "token_" + i
+          'token_' + i
         ).className = document
-          .getElementById("token_" + i)
-          .className.replace("highlight-color", "");
+          .getElementById('token_' + i)
+          .className.replace('highlight-color', '')
       }
       // 从labels数组中移除entity
-      this.labels[labelIndex].entitylist.splice(entityIndex, 1);
-      this.$forceUpdate(); // 嵌套数组更新没有监听到，强制更新数据
+      this.labels[labelIndex].entitylist.splice(entityIndex, 1)
+      this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
     },
     // 初始化labels 实体抽取和关系抽取可以复用的函数
     clearEntities() {
       for (var i in this.labels) {
         if (this.labels[i].entitylist.length !== 0) {
           for (var j in this.labels[i].entitylist) {
-            console.log(this.labels[i].entitylist[j]);
-            var entity = this.labels[i].entitylist[j];
-            var start = entity.start;
-            var end = entity.end;
+            console.log(this.labels[i].entitylist[j])
+            var entity = this.labels[i].entitylist[j]
+            var start = entity.start
+            var end = entity.end
             for (var k = start; k < end; k++) {
-              document.getElementById("token_" + k).className = "";
+              document.getElementById('token_' + k).className = ''
             }
           }
-          this.labels[i].entitylist = [];
+          this.labels[i].entitylist = []
         }
       }
     },
     // 处理光标选择事件 实体抽取和关系抽取可以复用
     handleSelect() {
-      var self = this;
-      var selection = window.getSelection();
+      var self = this
+      var selection = window.getSelection()
       if (self.curMarkLabel !== -1) {
         if (
           !selection.isCollapsed &&
-          selection.focusNode.parentElement.className === "content-area" &&
-          selection.anchorNode.parentElement.className === "content-area"
+          selection.focusNode.parentElement.className === 'content-area' &&
+          selection.anchorNode.parentElement.className === 'content-area'
         ) {
           // 进行标记
-          var start = selection.focusOffset;
-          var end = selection.anchorOffset;
+          var start = selection.focusOffset
+          var end = selection.anchorOffset
           if (start > end) {
-            var tmp = start;
-            start = end;
-            end = tmp;
+            var tmp = start
+            start = end
+            end = tmp
           }
-          self.addEntity(self.curMarkLabel, start, end);
-          window.getSelection().removeAllRanges();
+          self.addEntity(self.curMarkLabel, start, end)
+          window.getSelection().removeAllRanges()
           // 后处理
           if (!self.continuousMark) {
-            self.curMarkLabel = -1;
+            self.curMarkLabel = -1
           }
         }
       }
     },
+    // 搜索相关代码
     querySearchAsync(queryString, cb) {
       this.labels = this.labels1
-      var search_data = this.labels;
+      var search_data = this.labels
 
-      if(queryString === ""){
-        for(var i = 0; i < this.labels.length; i++) {
+      if (queryString === '') {
+        for (var i = 0; i < this.labels.length; i++) {
           this.shows[i] = true
         }
         this.labels = this.labels1
       }
       this.results = queryString
         ? search_data.filter(this.createStateFilter(queryString))
-        : search_data;
+        : search_data
 
-      const list = [];
-      for (let result of this.results) {
-        list.push({ value: result.labelname });
+      const list = []
+      for (const result of this.results) {
+        list.push({ value: result.labelname })
       }
 
-      clearTimeout(this.timeout);
+      clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         if (list.length !== this.labels.length) {
-          cb(list);
+          cb(list)
         } else {
-          cb([]);
+          cb([])
         }
-      }, 1000 * Math.random());
+      }, 1000 * Math.random())
     },
+    // 搜索相关代码
     handleSelect1(item) {
       var lit = []
-      if(item !== "") {
-        for(var i = 0; i < this.labels.length; i++) {
-          if(item.value === this.labels[i].labelname) {
+      if (item !== '') {
+        for (var i = 0; i < this.labels.length; i++) {
+          if (item.value === this.labels[i].labelname) {
             this.shows[i] = true
             lit.push(this.labels[i])
-          }else{
+          } else {
             this.shows[i] = false
           }
         }
         this.labels = lit
       }
-      
     },
+    // 搜索相关代码
     createStateFilter(queryString) {
       return (state) => {
         console.log(
           state.labelname.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
+        )
 
         return (
           state.labelname.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
+        )
+      }
     },
+    // 获取当前时间
     getTime() {
       /*eslint no-extend-native: ["error", { "exceptions": ["Date"] }]*/
       Date.prototype.Format = function(fmt) {
@@ -567,81 +571,80 @@ export default {
         return fmt
       }
       this.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
-    
     },
+    // 添加标注
     addFileMark() {
-    
       this.fileMark.document_id = this.id
       this.fileMark.document_type = this.$route.query.document_type
       this.fileMark.object_marks = []
       this.fileMark.relation_marks = []
       this.getTime()
-      for(var i = 0; i < this.labels.length; i++) {
+      for (var i = 0; i < this.labels.length; i++) {
         var objs = []
-        for(var j = 0; j < this.labels[i].entitylist.length; j++) {
+        for (var j = 0; j < this.labels[i].entitylist.length; j++) {
           var o = {
-                name: this.labels[i].entitylist[j].text,
-                description: '',
-                ICD_11: '',
-                type: '',
-                is_checked: false,
-                is_passed: false,
-                mark_user_id: 1,
-                mark_time: this.time,
-                check_user_id: '',
-                check_time: this.time,
-                multiple_marked: false
-              }
+            name: this.labels[i].entitylist[j].text,
+            description: '',
+            ICD_11: '',
+            type: '',
+            is_checked: false,
+            is_passed: false,
+            mark_user_id: 1,
+            mark_time: this.time,
+            check_user_id: '',
+            check_time: this.time,
+            multiple_marked: false
+          }
           objs.push(o)
         }
         var obj = {
-            object_type: this.labels[i].labelname,
-            objects: objs
-          }
+          object_type: this.labels[i].labelname,
+          objects: objs
+        }
         this.fileMark.object_marks.push(obj)
       }
 
-      for(let i = 0; i < this.relationOptions.length; i++){
+      for (let i = 0; i < this.relationOptions.length; i++) {
+        const arr = this.relationOptions[i].label.split('-')
+        const obj_rel = {
+          relaiton_id: '',
+          start_type: arr[0],
+          relation_type: arr[1],
+          end_type: arr[2],
+          relations: [
 
-        let arr = this.relationOptions[i].label.split('-')
-        let obj_rel = {
-            relaiton_id: '',
-            start_type: arr[0],
-            relation_type: arr[1],
-            end_type: arr[2],
-            relations:[
-              
-            ],
-            is_checked: false,
-            is_passed: false,
-            mark_user: '',
-            mark_time: this.time,
-            check_user: '',
-            check_time: ''
-          }
+          ],
+          is_checked: false,
+          is_passed: false,
+          mark_user: '',
+          mark_time: this.time,
+          check_user: '',
+          check_time: ''
+        }
         this.fileMark.relation_marks.push(obj_rel)
       }
-      
+
       const url = 'http://localhost:10088/FileMarks/addFileMark'
       axios.post(url, this.fileMark).then((response) => {
         console.log(response)
         console.log(response.data.msg)
-        if(response.data.msg === '添加成功'){
-            this.$message({
+        if (response.data.msg === '添加成功') {
+          this.$message({
             message: '恭喜你，添加成功',
             type: 'success'
-          });
+          })
         }
       }).catch((error) => {
         console.log(error)
       })
     },
+    // 选择关系
     getRelationChoice() {
-      const url = "http://localhost:10088/Relations/relation";
+      const url = 'http://localhost:10088/Relations/relation'
       axios.get(url).then((response) => {
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             value: '药品分类-适应症-疾病',
             label: '药品分类-适应症-疾病'
           }
@@ -649,7 +652,7 @@ export default {
           a.label = datas[data].object + '-' + datas[data].relation + '-' + datas[data].subject
           this.relationOptions.push(a)
         }
-      });
+      })
     },
     routeBack() {
       console.log(this.$route.query.document_type)
@@ -664,9 +667,9 @@ export default {
 
     },
     handleSkip() {},
-    handleSubmit() {},
-  },
-};
+    handleSubmit() {}
+  }
+}
 </script>
 
 <style  scoped>

@@ -6,7 +6,7 @@
       :fetch-suggestions="querySearchAsync"
       placeholder="请输入内容"
       @select="handleSelect"
-    ></el-autocomplete>
+    />
     <el-button
       style="margin-bottom: 20px"
       type="primary"
@@ -65,8 +65,7 @@
               type="success"
               style="width: 100px"
               @click="nextPage(row)"
-              >开始操作</el-button
-            >
+            >开始操作</el-button>
           </span>
         </template>
       </el-table-column>
@@ -80,27 +79,26 @@
       :page-sizes="[1, 2, 5, 10]"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    >
-    </el-pagination>
+    />
   </div>
 </template>
 
 <script>
-import { fetchList } from "@/api/article";
-import Sortable from "sortablejs";
-import axios from "axios";
+import { fetchList } from '@/api/article'
+import Sortable from 'sortablejs'
+import axios from 'axios'
 
 export default {
-  name: "DragTable",
+  name: 'DragTable',
   filters: {
     statusFilter(status) {
       const statusMap = {
-        true: "success",
-        false: "info",
+        true: 'success',
+        false: 'info'
         // false: 'danger'
-      };
-      return statusMap[status];
-    },
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
@@ -112,17 +110,17 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 10
       },
       sortable: null,
       oldList: [],
       newList: [],
       pagesize: 1,
       currentPage: 1,
-      state: "",
+      state: '',
       timeout: null,
-      results: [],
-    };
+      results: []
+    }
   },
   computed: {
     nowTable() {
@@ -132,23 +130,23 @@ export default {
           this.currentPage * this.pagesize
         ) || []
       )
-    },
+    }
   },
 
   watch: {
     $route(to, from) {
-      this.getReference();
-    },
+      this.getReference()
+    }
   },
   created() {
     // this.getList()
-    this.getReference();
+    this.getReference()
   },
   methods: {
     async getList() {
-      this.listLoading = true;
+      this.listLoading = true
       const { data } = await fetchList(this.listQuery)
-      console.log("909090909090")
+      console.log('909090909090')
       console.log(this.list)
       this.list = data.items
       this.list1 = this.list
@@ -157,13 +155,14 @@ export default {
       this.newList = this.oldList.slice()
       this.$nextTick(() => {
         this.setSort()
-      });
+      })
     },
     getRowKey(row) {
       return row.num
     },
+    // 获取后台文章的文章列表
     getReference() {
-      const url = "http://localhost:10088/reference/" + this.name;
+      const url = 'http://localhost:10088/reference/' + this.name
       this.listLoading = true
       axios.get(url).then((response) => {
         console.log(response)
@@ -179,11 +178,12 @@ export default {
         this.newList = this.oldList.slice()
         this.$nextTick(() => {
           this.setSort()
-        });
-      });
+        })
+      })
     },
+    // 进入下一层页面
     nextPage(obj) {
-      console.log(obj);
+      console.log(obj)
       console.log(this.name)
       // const url = 'http://localhost:10088/reference/get'
       // const query = {
@@ -194,7 +194,7 @@ export default {
       //   console.log(response)
       // })
       this.$router.push({
-        path: "/xieweihao/Document_information_extraction/Paper/ShowArticle",
+        path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
         query: {
           id: obj.id,
           title: obj.title,
@@ -205,82 +205,87 @@ export default {
           summary: obj.summary,
           keywords: obj.keywords,
           document_type: this.name
-        },
-      });
+        }
+      })
     },
-    handleSizeChange: function (size) {
-      this.pagesize = size;
+    // 和搜索相关的代码
+    handleSizeChange: function(size) {
+      this.pagesize = size
     },
-    handleCurrentChange: function (currentPage) {
-      this.currentPage = currentPage;
+    // 和搜索相关的代码
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage
     },
+    // 和搜索相关的代码
     querySearchAsync(queryString, cb) {
-      var search_data = this.list;
-      console.log(queryString);
-      if(queryString === ""){
+      var search_data = this.list
+      console.log(queryString)
+      if (queryString === '') {
         this.list = this.list1
       }
       this.results = queryString
         ? search_data.filter(this.createStateFilter(queryString))
-        : search_data;
-      console.log(this.results);
+        : search_data
+      console.log(this.results)
 
-      const list = [];
-      for (let result of this.results) {
-        list.push({ value: result.title });
+      const list = []
+      for (const result of this.results) {
+        list.push({ value: result.title })
       }
 
-      clearTimeout(this.timeout);
+      clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         if (list.length !== this.list.length) {
-          cb(list);
+          cb(list)
         } else {
-          cb([]);
+          cb([])
         }
-      }, 3000 * Math.random());
+      }, 3000 * Math.random())
     },
+    // 和搜索相关的代码
     createStateFilter(queryString) {
       return (state) => {
         console.log(
           state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
+        )
 
         return (
           state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
+        )
+      }
     },
+    // 和搜索相关的代码
     handleSelect(item) {
-      console.log(item);
-      this.list = this.results;
-      this.nowTable;
+      console.log(item)
+      this.list = this.results
+      this.nowTable
     },
     loadAll() {
-      return [];
+      return []
     },
     setSort() {
       const el = this.$refs.dragTable.$el.querySelectorAll(
-        ".el-table__body-wrapper > table > tbody"
-      )[0];
+        '.el-table__body-wrapper > table > tbody'
+      )[0]
       this.sortable = Sortable.create(el, {
-        ghostClass: "sortable-ghost", // Class name for the drop placeholder,
-        setData: function (dataTransfer) {
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+        setData: function(dataTransfer) {
           // to avoid Firefox bug
           // Detail see : https://github.com/RubaXa/Sortable/issues/1012
-          dataTransfer.setData("Text", "");
+          dataTransfer.setData('Text', '')
         },
         onEnd: (evt) => {
-          const targetRow = this.list.splice(evt.oldIndex, 1)[0];
-          this.list.splice(evt.newIndex, 0, targetRow);
+          const targetRow = this.list.splice(evt.oldIndex, 1)[0]
+          this.list.splice(evt.newIndex, 0, targetRow)
 
           // for show the changes, you can delete in you code
-          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0];
-          this.newList.splice(evt.newIndex, 0, tempIndex);
-        },
-      });
-    },
-  },
-};
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style>

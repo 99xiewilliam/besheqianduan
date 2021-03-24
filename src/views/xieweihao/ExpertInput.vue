@@ -14,8 +14,7 @@
         <el-container>
           <div class="div1">当前实体类型:</div>
           <el-select v-model="value" placeholder="请选择" @change="handleChange2($event)">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-container>
         <el-container class="mydiv2">
@@ -28,45 +27,45 @@
       <el-dialog title="编辑实体" :visible.sync="dialogFormVisible">
         <el-form :model="form">
           <el-form-item label="实体类型：" :label-width="formLabelWidth">
-            <el-input v-model="form.object_type" autocomplete="off" :disabled="true"></el-input>
+            <el-input v-model="form.object_type" autocomplete="off" :disabled="true" />
           </el-form-item>
           <el-form-item label="实体ID：" :label-width="formLabelWidth">
-            <el-input v-model="form.document_id" autocomplete="off" :disabled="true"></el-input>
+            <el-input v-model="form.document_id" autocomplete="off" :disabled="true" />
           </el-form-item>
           <el-form-item label="名称：" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="form.name" autocomplete="off" />
           </el-form-item>
           <el-form-item label="描述：" :label-width="formLabelWidth">
-            <el-input v-model="form.description" autocomplete="off"></el-input>
+            <el-input v-model="form.description" autocomplete="off" />
           </el-form-item>
           <el-form-item label="ICD-11：" :label-width="formLabelWidth">
-            <el-input v-model="form.iCD_11" autocomplete="off"></el-input>
+            <el-input v-model="form.iCD_11" autocomplete="off" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false" type="danger">取 消</el-button>
-          <el-button type="success" @click="submitEntityData()" >确 定</el-button>
+          <el-button type="danger" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="success" @click="submitEntityData()">确 定</el-button>
         </div>
       </el-dialog>
 
       <el-dialog title="编辑实体数据" :visible.sync="dialogFormVisible1">
         <el-form :model="form">
           <el-form-item label="实体类型：" :label-width="formLabelWidth">
-            <el-input placeholder="疾病类型" size="mini"></el-input>
+            <el-input placeholder="疾病类型" size="mini" />
           </el-form-item>
           <el-form-item label="名称：" :label-width="formLabelWidth">
-            <el-input placeholder="请填写文本格式数据" size="mini"></el-input>
+            <el-input placeholder="请填写文本格式数据" size="mini" />
           </el-form-item>
           <el-form-item label="描述：" :label-width="formLabelWidth">
-            <el-input placeholder="请填写文本格式数据" size="mini"></el-input>
+            <el-input placeholder="请填写文本格式数据" size="mini" />
           </el-form-item>
           <el-form-item label="ICD-11：" :label-width="formLabelWidth">
-            <el-input placeholder="请填写文本格式数据" size="mini"></el-input>
+            <el-input placeholder="请填写文本格式数据" size="mini" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible1 = false" type="danger">取 消</el-button>
-          <el-button type="success" @click="dialogFormVisible1 = false" >确 定</el-button>
+          <el-button type="danger" @click="dialogFormVisible1 = false">取 消</el-button>
+          <el-button type="success" @click="dialogFormVisible1 = false">确 定</el-button>
         </div>
       </el-dialog>
       <el-drawer
@@ -75,62 +74,62 @@
         :direction="direction"
         :before-close="handleClose"
         :v-model="form"
-        size="40%">
+        size="40%"
+      >
         <div>
           <span>当前选中的起点实体：</span>
           <span>实体类型：</span>
-          <span>{{form.object_type}}</span>
+          <span>{{ form.object_type }}</span>
         </div>
         <div>
           <span>实体ID：</span>
-          <span>{{form.document_id}}</span>
+          <span>{{ form.document_id }}</span>
         </div>
         <div>
           <span>属性摘要：</span>
-          <span>{{form.name}}</span>
+          <span>{{ form.name }}</span>
         </div>
-        <el-divider></el-divider>
+        <el-divider />
         <div>
           <span>终点实体配置：</span>
           <span>类型</span>
           <span>
             <el-select v-model="value1" placeholder="请选择" @change="handleChange1($event)">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </span>
-          <el-button type="primary" round size="mini"  @click="getInnerDrawer()">选择实例</el-button>
+          <el-button type="primary" round size="mini" @click="getInnerDrawer()">选择实例</el-button>
           <el-drawer
             title="请选择一个疾病类型的实例："
             :append-to-body="true"
             :before-close="handleClose1"
-            :visible.sync="innerDrawer">
+            :visible.sync="innerDrawer"
+          >
             <div>
               <el-autocomplete
-              v-model="state"
-              :fetch-suggestions="querySearchAsync1"
-              placeholder="请输入内容"
-              @select="handleSelect"
-            ></el-autocomplete>
+                v-model="state"
+                :fetch-suggestions="querySearchAsync1"
+                placeholder="请输入内容"
+                @select="handleSelect"
+              />
             </div>
             <div>
               <el-table
-              ref="singleTable"
-              :data="tableData"
-              highlight-current-row
-              @current-change="handleCurrentChange1"
-              style="width: 100%"
-              max-height="250">
+                ref="singleTable"
+                :data="tableData"
+                highlight-current-row
+                style="width: 100%"
+                max-height="250"
+                @current-change="handleCurrentChange1"
+              >
                 <el-table-column
                   prop="objID"
                   label="实例ID"
-                  >
-                </el-table-column>
+                />
                 <el-table-column
                   prop="name"
                   label="已添加关系"
-                  >
-                </el-table-column>
+                />
               </el-table>
             </div>
             <div style="margin-top: 20px">
@@ -143,15 +142,15 @@
           <span>
             实体ID：
           </span>
-          <span>{{keep.objID}}</span>
+          <span>{{ keep.objID }}</span>
         </div>
         <div>
           <span>
             属性摘要：
           </span>
-          <span>{{keep.name}}</span>
+          <span>{{ keep.name }}</span>
         </div>
-        <el-divider></el-divider>
+        <el-divider />
         <div>
           <span>
             实体关系配置
@@ -162,8 +161,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            >
-            </el-option>
+            />
           </el-select>
         </div>
 
@@ -177,8 +175,8 @@
           <el-switch
             v-model="switchValue"
             active-text="是"
-            inactive-text="否">
-          </el-switch>
+            inactive-text="否"
+          />
         </div>
         <div style="text-align: center;height:60px;">
           <div style="text-align: center;height:40px;">
@@ -191,11 +189,11 @@
       </el-drawer>
       <div class="margin">
         <el-autocomplete
-        v-model="state"
-        :fetch-suggestions="querySearchAsync"
-        placeholder="请输入内容"
-        @select="handleSelect1"
-      ></el-autocomplete>
+          v-model="state"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="请输入内容"
+          @select="handleSelect1"
+        />
         <el-button style="margin-bottom:20px;margin-left:20px;" type="primary">
           搜索
         </el-button>
@@ -222,29 +220,28 @@
         <el-table-column class-name="status-col" label="实体操作" width="100px">
           <template slot-scope="{row}">
             <span>
-              <a @click="js_method(row)" style="text-decoration:underline; color: blue;">编辑实体</a>
+              <a style="text-decoration:underline; color: blue;" @click="js_method(row)">编辑实体</a>
             </span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="关系操作" min-width="180">
           <template slot-scope="{row}">
-            <a @click="js_method1(row)" style="text-decoration:underline; color: blue;">新建关系</a>
-            <a @click="js_method()" style="text-decoration:underline; color: blue; margin-left:10px;">查看与修改</a>
+            <a style="text-decoration:underline; color: blue;" @click="js_method1(row)">新建关系</a>
+            <a style="text-decoration:underline; color: blue; margin-left:10px;" @click="js_method()">查看与修改</a>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="list.length"
-      :page-size="pagesize"
-      :current-page="currentPage"
-      :page-sizes="[1, 2, 5, 10]"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    >
-    </el-pagination>
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="list.length"
+        :page-size="pagesize"
+        :current-page="currentPage"
+        :page-sizes="[1, 2, 5, 10]"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </el-container>
   </div>
 </template>
@@ -283,17 +280,17 @@ export default {
       options: [],
       value: '',
       value1: '',
-      state: "",
+      state: '',
       dialogFormVisible: false,
       dialogFormVisible1: false,
       form: {
-          name: '',
-          type: '',
-          iCD_11: '',
-          description: '',
-          object_type: '',
-          document_id: ''
-        },
+        name: '',
+        type: '',
+        iCD_11: '',
+        description: '',
+        object_type: '',
+        document_id: ''
+      },
       formLabelWidth: '120px',
       drawer: false,
       direction: 'rtl',
@@ -340,8 +337,8 @@ export default {
           (this.currentPage - 1) * this.pagesize,
           this.currentPage * this.pagesize
         ) || []
-      );
-    },
+      )
+    }
   },
   created() {
     this.getList()
@@ -355,7 +352,7 @@ export default {
       this.listLoading = true
       const { data } = await fetchList(this.listQuery)
       this.list = data.items
-      console.log("9090909090")
+      console.log('9090909090')
       console.log(this.list)// test
       // this.total = data.total
       this.listLoading = false
@@ -365,6 +362,7 @@ export default {
         this.setSort()
       })
     },
+    // 获取实体标注数据
     getReference() {
       const url = 'http://localhost:10088/FileMarks/getFileMark'
       this.listLoading = true
@@ -372,17 +370,17 @@ export default {
         .then((response) => {
           // console.log(response)
           const { data } = response
-          console.log(data);
+          console.log(data)
           data.forEach((e) => {
-            let document_id = e.document_id
-            let document_type = e.document_type
+            const document_id = e.document_id
+            const document_type = e.document_type
             this.document_type = e.document_type
             e.object_marks.forEach((f) => {
-              let object_type = f.object_type
+              const object_type = f.object_type
               f.objects.forEach((g) => {
-                let item = {document_id: document_id, document_type: document_type, 
-            object_type: object_type, description: '', iCD_11: '', type: '', name: '', time: ''}
-                let obj = {}
+                const item = { document_id: document_id, document_type: document_type,
+                  object_type: object_type, description: '', iCD_11: '', type: '', name: '', time: '' }
+                const obj = {}
                 item.name = g.name
                 item.iCD_11 = g.iCD_11
                 item.description = g.description
@@ -407,14 +405,14 @@ export default {
           })
         })
     },
-
+    // 获取后台实体类型数据
     getData() {
-      const url = "http://localhost:10088/Entities/entity";
+      const url = 'http://localhost:10088/Entities/entity'
       axios.get(url).then((response) => {
         console.log(response.data)
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             value: '',
             label: ''
           }
@@ -423,7 +421,7 @@ export default {
           this.options.push(a)
         }
         // this.labels = data;
-        console.log(this.options);
+        console.log(this.options)
       })
     },
     getRowKey(row) {
@@ -446,145 +444,151 @@ export default {
       this.form.description = row.description
       this.form.document_id = row.document_id
     },
+    // 搜索相关代码
     querySearchAsync(queryString, cb) {
-      var search_data = this.list;
-      console.log(queryString);
-      if(queryString === ""){
+      var search_data = this.list
+      console.log(queryString)
+      if (queryString === '') {
         this.list = this.list1
       }
       this.results = queryString
         ? search_data.filter(this.createStateFilter(queryString))
-        : search_data;
-      console.log(this.results);
+        : search_data
+      console.log(this.results)
 
-      const list = [];
-      for (let result of this.results) {
-        list.push({ value: result.name });
+      const list = []
+      for (const result of this.results) {
+        list.push({ value: result.name })
       }
 
-      clearTimeout(this.timeout);
+      clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         if (list.length !== this.list.length) {
-          cb(list);
+          cb(list)
         } else {
-          cb([]);
+          cb([])
         }
-      }, 3000 * Math.random());
+      }, 3000 * Math.random())
     },
+    // 搜索相关代码
     querySearchAsync1(queryString, cb) {
-      var search_data = this.tableData;
-      console.log(queryString);
-      if(queryString === ""){
+      var search_data = this.tableData
+      console.log(queryString)
+      if (queryString === '') {
         this.tableData = this.tableData1
       }
       this.results = queryString
         ? search_data.filter(this.createStateFilter(queryString))
-        : search_data;
-      console.log(this.results);
+        : search_data
+      console.log(this.results)
 
-      const list = [];
-      for (let result of this.results) {
-        list.push({ value: result.name });
+      const list = []
+      for (const result of this.results) {
+        list.push({ value: result.name })
       }
 
-      clearTimeout(this.timeout);
+      clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         if (list.length !== this.tableData.length) {
-          cb(list);
+          cb(list)
         } else {
-          cb([]);
+          cb([])
         }
-      }, 3000 * Math.random());
+      }, 3000 * Math.random())
     },
+    // 搜索相关代码
     handleSelect1(item) {
-      console.log(item);
-      this.list = this.results;
+      console.log(item)
+      this.list = this.results
       // this.nowTable;
     },
+    // 搜索相关代码
     handleSelect(item) {
-      console.log(item);
-      this.tableData = this.results;
+      console.log(item)
+      this.tableData = this.results
       // this.nowTable;
     },
     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-            this.keep.name = '';
-            this.keep.objID = '';
-            this.value1 = '';
-            this.relation_value = '';
-            this.tableData = this.tableData2;
-            this.switchVisible = false;
-          })
-          .catch(_ => {});
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+          this.keep.name = ''
+          this.keep.objID = ''
+          this.value1 = ''
+          this.relation_value = ''
+          this.tableData = this.tableData2
+          this.switchVisible = false
+        })
+        .catch(_ => {})
     },
     handleClose1(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            this.setCurrent();
-            this.state = '';
-            done();
-          })
-          .catch(_ => {});
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.setCurrent()
+          this.state = ''
+          done()
+        })
+        .catch(_ => {})
     },
-    handleSizeChange: function (size) {
-      this.pagesize = size;
+    handleSizeChange: function(size) {
+      this.pagesize = size
     },
-    handleCurrentChange: function (currentPage) {
-      this.currentPage = currentPage;
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage
     },
     handleClick() {
       this.$router.push({
         path: '/xieweihao/ExpertInput/RelationDataProcess',
         query: {
         }
-      });
+      })
     },
+    // 让Form显示
     addOneEntity() {
       this.dialogFormVisible1 = true
     },
     handleChange(e) {
       this.choice = e
-      let obj = {
-        addedRelation: e
-      }
+      // const obj = {
+      //   addedRelation: e
+      // }
       // this.tableData.push(obj)
     },
     handleChange1(e) {
       console.log(e)
-      this.tableData = this.tableData2;
+      this.tableData = this.tableData2
       this.tableData = this.tableData.filter((data) => {
-          return data.object_type === e;
-        });
+        return data.object_type === e
+      })
     },
     handleChange2(e) {
       console.log(e)
-      this.list = this.list1;
+      this.list = this.list1
       this.list = this.list.filter((data) => {
-          return data.object_type === e;
-        });
+        return data.object_type === e
+      })
     },
     handleCurrentChange1(val) {
       console.log(val)
-      if(val === null){
+      if (val === null) {
         val = {}
       }
-      this.currentRow = val;
-      if(val.hasOwnProperty('name')){
-        this.keep.name = val.name;
+      this.currentRow = val
+      if (Object.prototype.hasOwnProperty.call(val, 'name')) {
+        this.keep.name = val.name
         console.log(this.keep.name)
       }
-      if(val.hasOwnProperty('objID')){
-        this.keep.objID = val.objID;
+      if (Object.prototype.hasOwnProperty.call(val, 'objID')) {
+        this.keep.objID = val.objID
       }
     },
+    // 获取后台关系类型数据
     getRelationData() {
-      const url = "http://localhost:10088/Relations/relation";
+      const url = 'http://localhost:10088/Relations/relation'
       axios.get(url).then((response) => {
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             value: '药品分类-适应症-疾病',
             label: '药品分类-适应症-疾病'
           }
@@ -592,213 +596,214 @@ export default {
           a.label = datas[data].object + '-' + datas[data].relation + '-' + datas[data].subject
           this.relation_options.push(a)
         }
-      });
+      })
     },
+    // 获取后台实体类型数据
     getEntityData() {
-      const url = "http://localhost:10088/Entities/entity"
+      const url = 'http://localhost:10088/Entities/entity'
       axios.get(url).then((response) => {
-        const datas = response.data;
-        for(var data in datas) {
-          let a = {
+        const datas = response.data
+        for (var data in datas) {
+          const a = {
             color: 1,
-            labelname: "藥品名",
-            entitylist: [],
+            labelname: '藥品名',
+            entitylist: []
           }
           a.color = parseInt(data)
           a.color = a.color + 1
           a.labelname = datas[data].name
           this.Entitylabels.push(a)
         }
-        
-      });
+      })
     },
     setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
+      this.$refs.singleTable.setCurrentRow(row)
       this.keep.name = ''
       this.keep.objID = ''
-      
     },
+    // 搜索相关代码
     createStateFilter(queryString) {
       return (state) => {
         console.log(
           state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
+        )
 
         return (
           state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
+        )
+      }
     },
+    // 让内部抽屉显示
     getInnerDrawer() {
-      this.innerDrawer = true;
-      if(this.value1 !== ''){
+      this.innerDrawer = true
+      if (this.value1 !== '') {
         this.tableData = this.tableData.filter((data) => {
-          return data.object_type === this.value1;
-        });
+          return data.object_type === this.value1
+        })
         console.log(this.tableData)
         this.tableData1 = this.tableData1.filter((data) => {
-          return data.object_type === this.value1;
-        });
+          return data.object_type === this.value1
+        })
       }
     },
     confirmData() {
-      this.innerDrawer = false;
-      this.switchVisible = true;
+      this.innerDrawer = false
+      this.switchVisible = true
     },
+    // 提交实体数据
     submitEntityData() {
       this.dialogFormVisible = false
-      for(let i = 0; i < this.relation_options.length; i++){
-        let arr = this.relation_options[i].label.split('-')
-        let obj_rel = {
-            relaiton_id: '',
-            start_type: arr[0],
-            relation_type: arr[1],
-            end_type: arr[2],
-            relations:[
-              
-            ],
+      for (let i = 0; i < this.relation_options.length; i++) {
+        const arr = this.relation_options[i].label.split('-')
+        const obj_rel = {
+          relaiton_id: '',
+          start_type: arr[0],
+          relation_type: arr[1],
+          end_type: arr[2],
+          relations: [
+
+          ],
+          is_checked: false,
+          is_passed: false,
+          mark_user: '',
+          mark_time: '',
+          check_user: '',
+          check_time: ''
+        }
+        this.fileMark.relation_marks.push(obj_rel)
+      }
+      for (let i = 0; i < this.Entitylabels.length; i++) {
+        this.getTime()
+        const obj_entity = {
+          object_type: this.Entitylabels[i].labelname,
+          objects: []
+        }
+        if (this.form.object_type === this.Entitylabels[i].labelname) {
+          var o = {
+            name: this.form.name,
+            description: this.form.description,
+            ICD_11: this.form.ICD_11,
+            type: 'expertInput',
             is_checked: false,
             is_passed: false,
-            mark_user: '',
-            mark_time: '',
-            check_user: '',
-            check_time: ''
+            mark_user_id: '',
+            mark_time: this.time,
+            check_user_id: '',
+            check_time: this.time,
+            multiple_marked: false
           }
-        this.fileMark.relation_marks.push(obj_rel);
-      }
-      for(let i = 0; i < this.Entitylabels.length; i++) {
-        this.getTime()
-        let obj_entity = {
-            object_type: this.Entitylabels[i].labelname,
-            objects: []
-          }
-        if(this.form.object_type === this.Entitylabels[i].labelname){
-           var o = {
-                name: this.form.name,
-                description: this.form.description,
-                ICD_11: this.form.ICD_11,
-                type: 'expertInput',
-                is_checked: false,
-                is_passed: false,
-                mark_user_id: '',
-                mark_time: this.time,
-                check_user_id: '',
-                check_time: this.time,
-                multiple_marked: false
-              }
-              obj_entity.objects.push(o)
-              this.fileMark.document_id = this.form.document_id
-              this.fileMark.document_type = this.document_type
+          obj_entity.objects.push(o)
+          this.fileMark.document_id = this.form.document_id
+          this.fileMark.document_type = this.document_type
         }
         this.fileMark.object_marks.push(obj_entity)
       }
       const url = 'http://localhost:10088/ExpertInput/addExpertInput'
       axios.post(url, this.fileMark).then((response) => {
-        
-        if(response.data.msg === '添加成功'){
+        if (response.data.msg === '添加成功') {
           this.fileMark = {
-              document_id: '',
-              document_type: '',
-              type: '',
-              object_marks: [
-                
-              ],
-              relation_marks: [
-        
-              ]
-            }
-            this.$message({
+            document_id: '',
+            document_type: '',
+            type: '',
+            object_marks: [
+
+            ],
+            relation_marks: [
+
+            ]
+          }
+          this.$message({
             message: '恭喜你，添加成功',
             type: 'success'
-          });
-        }else{
-          this.$message.error('添加失败');
+          })
+        } else {
+          this.$message.error('添加失败')
         }
       }).catch((error) => {
         console.log(error)
-      }) 
+      })
     },
+    // 提交关系数据
     submitRelationData() {
-      for(let i = 0; i < this.Entitylabels.length; i++) {
-        let obj_entity = {
-            object_type: this.Entitylabels[i].labelname,
-            objects: []
-          }
+      for (let i = 0; i < this.Entitylabels.length; i++) {
+        const obj_entity = {
+          object_type: this.Entitylabels[i].labelname,
+          objects: []
+        }
         this.fileMark.object_marks.push(obj_entity)
       }
-      for(let i = 0; i < this.relation_options.length; i++){
+      for (let i = 0; i < this.relation_options.length; i++) {
         this.getTime()
 
-        let arr = this.relation_options[i].label.split('-')
-        let obj_rel = {
-            relaiton_id: '',
-            start_type: arr[0],
-            relation_type: arr[1],
-            end_type: arr[2],
-            relations:[
-              
-            ],
+        const arr = this.relation_options[i].label.split('-')
+        const obj_rel = {
+          relaiton_id: '',
+          start_type: arr[0],
+          relation_type: arr[1],
+          end_type: arr[2],
+          relations: [
+
+          ],
+          is_checked: false,
+          is_passed: false,
+          mark_user: '',
+          mark_time: this.time,
+          check_user: '',
+          check_time: ''
+        }
+        if (this.relation_value === this.relation_options[i].label && this.keep.objID !== '') {
+          const add_obj = {
+            start_object: this.form.name,
+            end_object: this.keep.name,
+            advice: '',
+            evi_level: '',
+            evi_describe: '',
+            reference: '',
+            group: this.switchValue,
+            time: this.time,
+            type: 'expertInput',
             is_checked: false,
             is_passed: false,
-            mark_user: '',
+            mark_user_id: '',
             mark_time: this.time,
-            check_user: '',
-            check_time: ''
+            check_user_id: '',
+            check_time: '',
+            is_multiple_marked: false
           }
-          if(this.relation_value === this.relation_options[i].label && this.keep.objID !== ''){
-            
-            let add_obj = {
-                start_object: this.form.name,
-                end_object: this.keep.name,
-                advice: '',
-                evi_level: '',
-                evi_describe: '',
-                reference: '',
-                group: this.switchValue,
-                time: this.time,
-                type: 'expertInput',
-                is_checked: false,
-                is_passed: false,
-                mark_user_id: '',
-                mark_time: this.time,
-                check_user_id: '',
-                check_time: '',
-                is_multiple_marked: false
-              }
-              obj_rel.relations.push(add_obj);
-              
-              this.fileMark.document_id = this.form.document_id + '&&' +this.keep.objID;
-              this.fileMark.document_type = this.document_type;
-          }
-        
-        this.fileMark.relation_marks.push(obj_rel);
+          obj_rel.relations.push(add_obj)
+
+          this.fileMark.document_id = this.form.document_id + '&&' + this.keep.objID
+          this.fileMark.document_type = this.document_type
+        }
+
+        this.fileMark.relation_marks.push(obj_rel)
       }
       const url = 'http://localhost:10088/ExpertInput/addExpertInput'
       axios.post(url, this.fileMark).then((response) => {
-        
-        if(response.data.msg === '添加成功'){
+        if (response.data.msg === '添加成功') {
           this.fileMark = {
-              document_id: '',
-              document_type: '',
-              type: '',
-              object_marks: [
-                
-              ],
-              relation_marks: [
-        
-              ]
-            }
-            this.$message({
+            document_id: '',
+            document_type: '',
+            type: '',
+            object_marks: [
+
+            ],
+            relation_marks: [
+
+            ]
+          }
+          this.$message({
             message: '恭喜你，添加成功',
             type: 'success'
-          });
-        }else{
-          this.$message.error('添加失败');
+          })
+        } else {
+          this.$message.error('添加失败')
         }
       }).catch((error) => {
         console.log(error)
-      }) 
+      })
     },
+    // 获取当前时间
     getTime() {
       /*eslint no-extend-native: ["error", { "exceptions": ["Date"] }]*/
       Date.prototype.Format = function(fmt) {
@@ -838,7 +843,7 @@ export default {
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
-        },
+        }
       })
     }
   }
