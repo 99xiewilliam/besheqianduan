@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -82,7 +82,7 @@ export const constantRoutes = [
         meta: { title: '数据管理', icon: 'dashboard', affix: true }
       }
     ]
-  },
+  }
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -396,14 +396,21 @@ export const asyncRoutes = [
         path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
         component: () => import('@/views/xieweihao/showArticle'),
         name: 'ShowArticle',
-        meta: { title: '实体标注', icon: 'theme'},
+        meta: { title: '实体标注', icon: 'theme' },
         hidden: true
       },
       {
         path: '/xieweihao/Document_information_extraction/Paper/anotationRelation',
         component: () => import('@/views/xieweihao/anotationRelation'),
-        name:'anotationRelation',
-        meta: {title: '关系标注', icon: 'theme'},
+        name: 'anotationRelation',
+        meta: { title: '关系标注', icon: 'theme' },
+        hidden: true
+      },
+      {
+        path: '/xieweihao/Document_information_extraction/Paper/pictureToWord',
+        component: () => import('@/views/xieweihao/pictureToWord'),
+        name: 'pictureToWord',
+        meta: { title: ' OCR 识别图片', icon: 'theme' },
         hidden: true
       }
     ]

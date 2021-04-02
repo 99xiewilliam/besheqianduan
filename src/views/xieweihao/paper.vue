@@ -7,12 +7,18 @@
       placeholder="请输入内容"
       @select="handleSelect"
     />
-    <el-button
-      style="margin-bottom: 20px"
+    <!-- <el-button
+      style="margin-bottom: 20px; margin-left: 20px"
       type="primary"
-      icon="el-icon-document"
     >
       搜索
+    </el-button> -->
+    <el-button
+      style="margin-bottom: 20px; margin-left: 20px;"
+      type="primary"
+      @click="goToPicture()"
+    >
+      图片读取文本
     </el-button>
     <el-table
       ref="dragTable"
@@ -259,6 +265,15 @@ export default {
       console.log(item)
       this.list = this.results
       this.nowTable
+    },
+    // 跳转去pictureToWord页面
+    goToPicture() {
+      this.$router.push({
+        path: '/xieweihao/Document_information_extraction/Paper/pictureToWord',
+        query: {
+
+        }
+      })
     },
     loadAll() {
       return []
