@@ -94,6 +94,7 @@
             <el-button class="right" @click="handleSkip">不合格</el-button>
             <el-button
               type="primary"
+
               class="right"
               @click="addOcrData()"
             >提交</el-button>
@@ -331,6 +332,12 @@ export default {
       const url = 'http://localhost:10088/OcrData/insertData'
       axios.post(url, this.saveData).then((response) => {
         console.log(response)
+        if (response.data.code === 0) {
+          this.$message({
+            message: 'add success',
+            type: 'success'
+          })
+        }
       }).catch((error) => {
         console.log(error)
       })
