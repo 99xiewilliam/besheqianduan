@@ -95,12 +95,12 @@
             <el-button
               type="primary"
               class="right"
-              @click="addFileMark()"
+              @click="addOcrData()"
             >提交</el-button>
             <!-- <el-button class="right" @click="handleSkip">下一篇</el-button> -->
           </div>
           <el-input
-            v-model="textarea2"
+            v-model="targetText"
             type="textarea"
             autosize
             placeholder="请输入内容"
@@ -193,9 +193,9 @@ export default {
   data() {
     return {
       textarea1: '',
-      textarea2: '',
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       fileList: [],
+      saveData: {},
       id: this.$route.query.id,
       title: this.$route.query.title,
       author: this.$route.query.author,
@@ -323,6 +323,18 @@ export default {
     handleSuccess(res, file) {
       console.log(res)
       this.targetText = res
+    },
+    addOcrData() {
+      this.saveData.content = this.targetText
+      this.saveData.title = this.textarea1
+      this.getTime()
+      const url = 'http://localhost:10088/OcrData/insertData'
+      axios.post(url, this.saveData).then((response) => {
+        console.log(response)
+      }).catch((error) => {
+        console.log(error)
+      })
+
     },
     // 获取后台文章的摘要等信息
     getData() {
@@ -658,7 +670,7 @@ export default {
         }
         return fmt
       }
-      this.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
+      this.saveData.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
     },
     // 添加标注
     addFileMark() {
