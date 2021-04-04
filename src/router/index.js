@@ -412,6 +412,20 @@ export const asyncRoutes = [
         name: 'pictureToWord',
         meta: { title: ' OCR 识别图片', icon: 'theme' },
         hidden: true
+      },
+      {
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument',
+        component: () => import('@/views/xieweihao/electronicDocument'),
+        name: 'electronicDocument',
+        meta: { title: ' 电子文档预览', icon: 'theme' },
+        hidden: true
+      },
+      {
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/electronicDocumentContent',
+        component: () => import('@/views/xieweihao/electronicDocumentContent'),
+        name: 'electronicDocumentContent',
+        meta: { title: ' 电子文档内容', icon: 'theme' },
+        hidden: true
       }
     ]
   },

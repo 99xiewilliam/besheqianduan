@@ -78,7 +78,7 @@
               type="success"
               style="width: 100px"
               @click="nextPage(row)"
-            >开始操作</el-button>
+            >预览</el-button>
           </span>
         </template>
       </el-table-column>
@@ -207,7 +207,7 @@ export default {
       //   console.log(response)
       // })
       this.$router.push({
-        path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/electronicDocumentContent',
         query: {
           id: obj.id,
           title: obj.title,
