@@ -13,6 +13,7 @@
     >
       搜索
     </el-button> -->
+    <pdf ref="pdf" :src="pdf_url" />
     <el-button
       style="margin-bottom: 20px; margin-left: 20px;"
       type="primary"
@@ -100,6 +101,7 @@
 import { fetchList } from '@/api/article'
 import Sortable from 'sortablejs'
 import axios from 'axios'
+import pdf from 'vue-pdf'
 
 export default {
   name: 'DragTable',
@@ -113,8 +115,16 @@ export default {
       return statusMap[status]
     }
   },
+  components: {
+    pdf
+  },
   data() {
     return {
+      pdf_url: '',
+      pdf_obj: {
+        'id': ''
+      },
+      pdfCurrentPage: null,
       count: 1,
       name: this.$route.query.name,
       list: [],
@@ -153,7 +163,8 @@ export default {
   },
   created() {
     // this.getList()
-    this.getReference()
+    // this.getReference()
+    this.getPdfData()
   },
   methods: {
     async getList() {
@@ -172,6 +183,76 @@ export default {
     },
     getRowKey(row) {
       return row.num
+    },
+    getPdfData() {
+      const url = 'http://localhost:10088/Pdf/getPdf'
+      // axios.get(url).then((response) => {
+      //   console.log(response)
+      //   console.log(typeof response.data[0].base64)
+      //   let blob = new Blob([response.data[0].base64], {
+      //       type: 'text/plain'
+      //   });
+      //   this.pdf_url = URL.createObjectURL(blob);
+      // console.log(imgUrl)
+      // })
+      // axios({
+      //   method: 'GET',
+      //   url: 'http://localhost:10088/Pdf/getPdf',
+      //   params: {
+      //     id: '606ae579cdb2ca093653a88d'
+      //   },
+      // headers: {
+      //   'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
+      // },
+      //   responseType: 'blob'
+      // }).then(response => {
+      //   this.pdf_url = this.getObjectURL(response.data)
+      //   this.pdfCurrentPage = 1
+      // })
+      // axios.get(url, {
+      //   params: {
+      //     id: '606ae579cdb2ca093653a88d'
+      //   },
+      //   paramsSerializer: function(params) {
+      //     return qs.stringify(params, { arrayFormat: 'brackets' })
+      //   },
+      //   headers: {
+      //     'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
+      //   },
+      //   responseType: 'blob'
+      // }).then(response => {
+      //   this.pdf_url = this.getObjectURL(response.data)
+      //   this.pdfCurrentPage = 1
+      // })
+      this.pdf_obj.id = '606ae579cdb2ca093653a88d'
+      axios({
+        method: 'post',
+        url: url,
+        data: this.pdf_obj,
+        responseType: 'blob'
+      }).then(response => {
+        this.pdf_url = this.getObjectURL(response.data)
+      })
+    },
+    // 处理文件流
+    getObjectURL(file) {
+      let url = null
+      if (window.createObjectURL !== undefined) { // basic
+        url = window.createObjectURL(file)
+      } else if (window.webkitURL !== undefined) { // webkit or chrome
+        try {
+          url = window.webkitURL.createObjectURL(file)
+        } catch (error) {
+          console.log(error)
+        }
+      } else if (window.URL !== undefined) { // mozilla(firefox)
+        try {
+          url = window.URL.createObjectURL(file)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      return url
     },
     // 获取后台文章的文章列表
     getReference() {
