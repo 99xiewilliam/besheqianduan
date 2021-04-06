@@ -46,7 +46,7 @@
               <h2>添加关系</h2>
               <hr>
             </el-header>
-            <div v-show="tableShow">
+            <!-- <div v-show="tableShow">
               <el-table
                 :data="tableData"
                 style="width: 100%"
@@ -86,7 +86,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-            </div>
+            </div> -->
             <el-main>
               <i
                 v-show="showDot"
@@ -110,7 +110,7 @@
                     </el-select>
                   </div>
                   <div class="text item">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button @click="showCardDisaper()">取 消</el-button>
                     <el-button
                       type="primary"
                       @click="dealWithRelation()"
@@ -278,7 +278,7 @@
                           <el-input v-model="describe" placeholder="请输入临床依据" />
                         </div>
                         <div class="text item">
-                          <el-button @click="dialogFormVisible = false">取 消</el-button>
+                          <el-button @click="showCard2Disapeer">取 消</el-button>
                           <el-button
                             type="primary"
                             @click="checkRelation()"
@@ -306,6 +306,7 @@ export default {
   components: { splitPane },
   data() {
     return {
+      judge: 0,
       document_id: this.$route.query.document_id,
       title: this.$route.query.title,
       author: this.$route.query.author,
@@ -324,7 +325,7 @@ export default {
       ],
       label1: [
         {
-          color: 6,
+          color: 1,
           labelname: '目标实体',
           entitylist: []
         }
@@ -492,6 +493,7 @@ export default {
     },
     // 起始单个实体添加模式
     handleSingleAdd(index) {
+      this.judge = 0
       var self = this
       var selection = window.getSelection()
       this.curMarkLabel = index
@@ -524,6 +526,8 @@ export default {
     },
     // 目标单个实体添加模式
     handleSingleAdd1(index) {
+      console.log('target12121212')
+      this.judge = 1
       var self = this
       var selection = window.getSelection()
       this.curMarkLabel = index
@@ -633,6 +637,9 @@ export default {
     // 从labels中移除实体，去除背景色 不能复用的函数，但是实体抽取和关系抽取可以相互参考
     removeEntity(labelIndex, entityIndex) {
       // Remove Entity, Remove Mark
+      console.log(labelIndex)
+      console.log(entityIndex)
+      console.log(this.labels[labelIndex].entitylist[entityIndex])
       var start = this.labels[labelIndex].entitylist[entityIndex].start
       var end = this.labels[labelIndex].entitylist[entityIndex].end
       for (var i = start; i < end; i++) {
@@ -729,7 +736,12 @@ export default {
             start = end
             end = tmp
           }
-          self.addEntity(self.curMarkLabel, start, end)
+          if (self.judge === 0) {
+            self.addEntity(self.curMarkLabel, start, end)
+          } else if (self.judge === 1) {
+            self.addEntity1(self.curMarkLabel, start, end)
+          }
+
           window.getSelection().removeAllRanges()
           // 后处理
           if (!self.continuousMark) {
@@ -748,6 +760,26 @@ export default {
       // this.dialogFormVisible = true;
       this.showCard = true
       this.showDot = false
+      this.tableShow = false
+    },
+    showCardDisaper() {
+      this.showCard = false
+      this.showDot = true
+    },
+    showCard2Disapeer() {
+      this.showCard = true
+      this.showCard2 = false
+
+      const length = this.labels[0].entitylist.length
+      const length1 = this.label1[0].entitylist.length
+
+      for (let j = length - 1; j >= 0; j--) {
+        this.removeEntity(0, j)
+      }
+
+      for (let i = length1 - 1; i >= 0; i--) {
+        this.removeEntity1(0, i)
+      }
     },
     handleChange(e) {
       this.choice = e

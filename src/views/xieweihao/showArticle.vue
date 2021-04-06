@@ -48,7 +48,7 @@
               placeholder="请输入内容"
               @select="handleSelect1"
             />
-            <el-button class="right" @click="handleSkip">不合格</el-button>
+            <el-button class="right" @click="routeBack()">不合格</el-button>
             <el-button
               type="primary"
               class="right"
