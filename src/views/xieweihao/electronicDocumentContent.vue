@@ -7,37 +7,37 @@
         style="weight: 1000; cursor: pointer"
         @click="routeBack()"
       />
-      <span style="font-weight:bold; font-size:30px">{{ "标题：" }}</span>
-      <el-input
-        v-model="textarea1"
-        type="textarea"
-        autosize
-        placeholder="请输入标题"
-      />
+      <!-- <span style="font-weight:bold; font-size:30px">{{ "标题：" }}</span> -->
     </div>
     <split-pane split="vertical" @resize="resize">
       <template slot="paneL">
         <el-card class="box-card">
-          <div class="content-container">
-            <el-upload
-              class="upload-demo"
-              action="http://localhost:10088/Upload/addOcrFile"
-              name="img1"
-              :before-upload="beforeUpload"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :before-remove="beforeRemove"
-              multiple
-              :limit="1"
-              :on-exceed="handleExceed"
-              :on-success="handleSuccess"
-              :file-list="fileList"
-            >
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif/bmp文件，且不超过5M</div>
-            </el-upload>
-            <el-image :src="src" />
-          </div>
+          <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
+            <div class="content-container">
+              <!-- <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;"> -->
+              <button
+                @click="logContent"
+              >
+                log content
+              </button>
+              <div class="pdf">
+                <p class="arrow">
+                  <span class="turn" :class="{grey: pdfCurrentPage==1}" @click="changePdfPage(0)">Preview</span>
+                  {{ pdfCurrentPage }} / {{ pageCount }}
+                  <span class="turn" :class="{grey: pdfCurrentPage==pageCount}" @click="changePdfPage(1)">Next</span>
+                </p>
+                <pdf
+                  ref="pdf"
+                  :src="pdf_url"
+                  :page="pdfCurrentPage"
+                  @num-pages="pageCount=$event"
+                  @page-loaded="pdfCurrentPage=$event"
+                  @loaded="loadPdfHandler"
+                />
+              </div>
+            <!-- </el-scrollbar> -->
+            </div>
+          </el-scrollbar>
         </el-card>
       </template>
       <template slot="paneR">
@@ -51,10 +51,17 @@
             >提交</el-button>
           </div>
           <el-input
-            v-model="targetText"
+            v-model="textarea1"
             type="textarea"
             autosize
+            placeholder="请输入标题"
+          />
+          <el-input
+            v-model="targetText"
+            type="textarea"
+            :autosize="{ minRows: 10, maxRows: 60}"
             placeholder="请输入内容"
+            style="margin-top: 20px;"
           />
         </el-card>
       </template>
@@ -66,22 +73,22 @@
 /* eslint-disable */
 import splitPane from 'vue-splitpane'
 import axios from 'axios'
+import pdf from 'vue-pdf'
 export default {
   name: 'SplitpaneDemo',
-  components: { splitPane },
+  components: { splitPane, pdf },
   data() {
     return {
+      pdf_url: '',
+      pdf_obj: {
+        'id': this.$route.query.id
+      },
+      pdfCurrentPage: 0,
+      pageCount: 0,
       textarea1: '',
-      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       fileList: [],
       saveData: {},
       id: this.$route.query.id,
-      title: this.$route.query.title,
-      author: this.$route.query.author,
-      date: this.$route.query.date,
-      journal: this.$route.query.journal,
-      summary: this.$route.query.summary,
-      keywords: this.$route.query.keywords,
       activeName: 'first',
       labels: [
 
@@ -91,7 +98,7 @@ export default {
       ],
       entitylist: [],
       // 文档部分
-      targetText: ' ',
+      targetText: '',
       targetTextArr: [],
       // 页面配置和状态部分
       curindex: 0, // 当前文档
@@ -101,51 +108,7 @@ export default {
       shows: [],
       state: '',
       results: [],
-      time: '',
-      fileMark: {
-        document_id: '',
-        document_type: this.$route.query.document_type,
-        type: '',
-        object_marks: [
-
-        ],
-        relation_marks: [
-          {
-            relaiton_id: '',
-            start_type: '',
-            relation_type: '',
-            end_type: '',
-            relations: [
-              {
-                start_object: '',
-                end_object: '',
-                advice: '',
-                evi_level: '',
-                evi_describe: '',
-                reference: '',
-                group: '',
-                time: '',
-                type: '',
-                is_checked: false,
-                is_passed: false,
-                mark_user_id: '',
-                mark_time: '',
-                check_user_id: '',
-                check_time: '',
-                is_multiple_marked: false
-              }
-            ],
-            is_checked: false,
-            is_passed: false,
-            mark_user: '',
-            mark_time: '',
-            check_user: '',
-            check_time: ''
-          }
-        ]
-      },
-      fileMark: [],
-      relationOptions: []
+      time: ''
     }
   },
   // watch: {
@@ -165,8 +128,107 @@ export default {
   },
   created() {
     // this.getData()
+    this.getPdfData()
   },
   methods: {
+    getPdfData() {
+      const url = 'http://localhost:10088/Pdf/getPdf'
+      // axios.get(url).then((response) => {
+      //   console.log(response)
+      //   console.log(typeof response.data[0].base64)
+      //   let blob = new Blob([response.data[0].base64], {
+      //       type: 'text/plain'
+      //   });
+      //   this.pdf_url = URL.createObjectURL(blob);
+      // console.log(imgUrl)
+      // })
+      // axios({
+      //   method: 'GET',
+      //   url: 'http://localhost:10088/Pdf/getPdf',
+      //   params: {
+      //     id: '606ae579cdb2ca093653a88d'
+      //   },
+      // headers: {
+      //   'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
+      // },
+      //   responseType: 'blob'
+      // }).then(response => {
+      //   this.pdf_url = this.getObjectURL(response.data)
+      //   this.pdfCurrentPage = 1
+      // })
+      // axios.get(url, {
+      //   params: {
+      //     id: '606ae579cdb2ca093653a88d'
+      //   },
+      //   paramsSerializer: function(params) {
+      //     return qs.stringify(params, { arrayFormat: 'brackets' })
+      //   },
+      //   headers: {
+      //     'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
+      //   },
+      //   responseType: 'blob'
+      // }).then(response => {
+      //   this.pdf_url = this.getObjectURL(response.data)
+      //   this.pdfCurrentPage = 1
+      // })
+      //this.pdf_obj.id = this.id
+      axios({
+        method: 'post',
+        url: url,
+        data: this.pdf_obj,
+        responseType: 'blob'
+      }).then(response => {
+        console.log(response)
+        this.pdf_url = this.getObjectURL(response.data)
+      })
+    },
+    // 处理文件流
+    getObjectURL(file) {
+      let url = null
+      if (window.createObjectURL !== undefined) { // basic
+        url = window.createObjectURL(file)
+      } else if (window.webkitURL !== undefined) { // webkit or chrome
+        try {
+          url = window.webkitURL.createObjectURL(file)
+        } catch (error) {
+          console.log(error)
+        }
+      } else if (window.URL !== undefined) { // mozilla(firefox)
+        try {
+          url = window.URL.createObjectURL(file)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      return url
+    },
+    changePdfPage (val) {
+      // console.log(val)
+      if (val === 0 && this.pdfCurrentPage > 1) {
+        this.pdfCurrentPage--
+        // console.log(this.currentPage)
+      }
+      if (val === 1 && this.pdfCurrentPage < this.pageCount) {
+        this.pdfCurrentPage++
+        // console.log(this.currentPage)
+      }
+    },
+    // pdf加载时
+    loadPdfHandler (e) {
+      this.pdfCurrentPage = 1 // 加载的时候先加载第一页
+      console.log(this.pageCount)
+    },
+    logContent() {
+      let win = this
+			this.$refs.pdf.pdf.forEachPage(function(page) {
+				return page.getTextContent()
+				.then(function(content) {
+					var text = content.items.map(item => item.str)
+          win.targetText = win.targetText + text
+					console.log(text)
+				})
+			});
+		},
     handleRemove(file, fileList) {
         console.log(file, fileList);
     },

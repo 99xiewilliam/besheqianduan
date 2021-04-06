@@ -36,10 +36,11 @@
       fit
       highlight-current-row
       style="width: 100%"
+      :row-class-name="rowIndex"
     >
       <el-table-column align="center" label="序号" width="65">
         <template slot-scope="{ row }">
-          <span>{{ row.id.counter }}</span>
+          <span>{{ computeTableIndex(row) }}</span>
         </template>
       </el-table-column>
 
@@ -89,7 +90,7 @@
       :total="list.length"
       :page-size="pagesize"
       :current-page="currentPage"
-      :page-sizes="[1, 2, 5, 10]"
+      :page-sizes="[5, 10, 15, 20]"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -128,7 +129,7 @@ export default {
       sortable: null,
       oldList: [],
       newList: [],
-      pagesize: 1,
+      pagesize: 5,
       currentPage: 1,
       state: '',
       timeout: null,
@@ -172,6 +173,13 @@ export default {
     },
     getRowKey(row) {
       return row.num
+    },
+    rowIndex({ row, rowIndex }) {
+      row.rowIndex = rowIndex
+    },
+    computeTableIndex(row) {
+      console.log('123131')
+      return (this.currentPage - 1) * this.pagesize + row.rowIndex + 1
     },
     // 获取后台文章的文章列表
     getReference() {

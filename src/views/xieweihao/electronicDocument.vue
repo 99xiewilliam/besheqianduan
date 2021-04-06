@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <!-- Note that row-key is necessary to get a correct row order. -->
+    <el-page-header @back="goBack" />
     <el-autocomplete
       v-model="state"
       :fetch-suggestions="querySearchAsync"
@@ -13,21 +13,20 @@
     >
       搜索
     </el-button> -->
-    <pdf ref="pdf" :src="pdf_url" />
-    <el-button
-      style="margin-bottom: 20px; margin-left: 20px;"
-      type="primary"
-      @click="goToPicture()"
-    >
-      图片读取文本
-    </el-button>
-    <el-button
-      style="margin-bottom: 20px; margin-left: 20px;"
-      type="primary"
-      @click="goToElectronicDocument()"
-    >
-      电子文档预览
-    </el-button>
+    <!-- <div class="pdf">
+      <p class="arrow">
+        <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}">Preview</span>
+        {{pdfCurrentPage}} / {{pageCount}}
+        <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}">Next</span>
+      </p>
+      <pdf ref="pdf"
+      :src="pdf_url"
+      :page="pdfCurrentPage"
+      @num-pages="pageCount=$event"
+      @page-loaded="pdfCurrentPage=$event"
+      @loaded="loadPdfHandler"/>
+    </div> -->
+
     <el-table
       ref="dragTable"
       v-loading="listLoading"
@@ -37,40 +36,34 @@
       fit
       highlight-current-row
       style="width: 100%"
+      :row-class-name="rowIndex"
     >
       <el-table-column align="center" label="序号" width="65">
         <template slot-scope="{ row }">
-          <span>{{ row.id.counter }}</span>
+          <span>{{ computeTableIndex(row) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="出版时间">
+      <el-table-column width="110px" align="center" label="id">
         <template slot-scope="{ row }">
-          <!-- <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span> -->
-          <span>{{ row.date }}</span>
+          <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column min-width="300px" label="题目">
         <template slot-scope="{ row }">
-          <span>{{ row.title }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" align="center" label="作者">
-        <template slot-scope="{ row }">
-          <span>{{ row.author }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" label="标注情况" width="110">
+      <!-- <el-table-column class-name="status-col" label="预览情况" width="110">
         <template slot-scope="{ row }">
           <el-tag :type="row.is_marked | statusFilter">
-            <span v-if="row.is_marked == true">已标注</span>
-            <span v-else>未标注</span>
+            <span v-if="row.is_marked == true">已预览</span>
+            <span v-else>未预览</span>
           </el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="{ row }">
@@ -90,7 +83,7 @@
       :total="list.length"
       :page-size="pagesize"
       :current-page="currentPage"
-      :page-sizes="[1, 2, 5, 10]"
+      :page-sizes="[5, 10, 15, 20]"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -101,7 +94,7 @@
 import { fetchList } from '@/api/article'
 import Sortable from 'sortablejs'
 import axios from 'axios'
-import pdf from 'vue-pdf'
+// import pdf from 'vue-pdf'
 
 export default {
   name: 'DragTable',
@@ -116,15 +109,16 @@ export default {
     }
   },
   components: {
-    pdf
+    // pdf
   },
   data() {
     return {
-      pdf_url: '',
-      pdf_obj: {
-        'id': ''
-      },
-      pdfCurrentPage: null,
+      // pdf_url: '',
+      // pdf_obj: {
+      //   'id': ''
+      // },
+      // pdfCurrentPage: 0,
+      // pageCount: 0,
       count: 1,
       name: this.$route.query.name,
       list: [],
@@ -132,8 +126,8 @@ export default {
       total: null,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 10
+        page: 10,
+        limit: 20
       },
       sortable: null,
       oldList: [],
@@ -164,7 +158,8 @@ export default {
   created() {
     // this.getList()
     // this.getReference()
-    this.getPdfData()
+    // this.getPdfData()
+    this.getReference()
   },
   methods: {
     async getList() {
@@ -184,89 +179,112 @@ export default {
     getRowKey(row) {
       return row.num
     },
-    getPdfData() {
-      const url = 'http://localhost:10088/Pdf/getPdf'
-      // axios.get(url).then((response) => {
-      //   console.log(response)
-      //   console.log(typeof response.data[0].base64)
-      //   let blob = new Blob([response.data[0].base64], {
-      //       type: 'text/plain'
-      //   });
-      //   this.pdf_url = URL.createObjectURL(blob);
-      // console.log(imgUrl)
-      // })
-      // axios({
-      //   method: 'GET',
-      //   url: 'http://localhost:10088/Pdf/getPdf',
-      //   params: {
-      //     id: '606ae579cdb2ca093653a88d'
-      //   },
-      // headers: {
-      //   'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
-      // },
-      //   responseType: 'blob'
-      // }).then(response => {
-      //   this.pdf_url = this.getObjectURL(response.data)
-      //   this.pdfCurrentPage = 1
-      // })
-      // axios.get(url, {
-      //   params: {
-      //     id: '606ae579cdb2ca093653a88d'
-      //   },
-      //   paramsSerializer: function(params) {
-      //     return qs.stringify(params, { arrayFormat: 'brackets' })
-      //   },
-      //   headers: {
-      //     'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
-      //   },
-      //   responseType: 'blob'
-      // }).then(response => {
-      //   this.pdf_url = this.getObjectURL(response.data)
-      //   this.pdfCurrentPage = 1
-      // })
-      this.pdf_obj.id = '606ae579cdb2ca093653a88d'
-      axios({
-        method: 'post',
-        url: url,
-        data: this.pdf_obj,
-        responseType: 'blob'
-      }).then(response => {
-        this.pdf_url = this.getObjectURL(response.data)
-      })
+    rowIndex({ row, rowIndex }) {
+      row.rowIndex = rowIndex
     },
-    // 处理文件流
-    getObjectURL(file) {
-      let url = null
-      if (window.createObjectURL !== undefined) { // basic
-        url = window.createObjectURL(file)
-      } else if (window.webkitURL !== undefined) { // webkit or chrome
-        try {
-          url = window.webkitURL.createObjectURL(file)
-        } catch (error) {
-          console.log(error)
-        }
-      } else if (window.URL !== undefined) { // mozilla(firefox)
-        try {
-          url = window.URL.createObjectURL(file)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-      return url
+    computeTableIndex(row) {
+      console.log('123131')
+      return (this.currentPage - 1) * this.pagesize + row.rowIndex + 1
     },
+    goBack() {
+      this.$router.back(-1)
+    },
+    // getPdfData() {
+    //   const url = 'http://localhost:10088/Pdf/getPdf'
+    //   // axios.get(url).then((response) => {
+    //   //   console.log(response)
+    //   //   console.log(typeof response.data[0].base64)
+    //   //   let blob = new Blob([response.data[0].base64], {
+    //   //       type: 'text/plain'
+    //   //   });
+    //   //   this.pdf_url = URL.createObjectURL(blob);
+    //   // console.log(imgUrl)
+    //   // })
+    //   // axios({
+    //   //   method: 'GET',
+    //   //   url: 'http://localhost:10088/Pdf/getPdf',
+    //   //   params: {
+    //   //     id: '606ae579cdb2ca093653a88d'
+    //   //   },
+    //   // headers: {
+    //   //   'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
+    //   // },
+    //   //   responseType: 'blob'
+    //   // }).then(response => {
+    //   //   this.pdf_url = this.getObjectURL(response.data)
+    //   //   this.pdfCurrentPage = 1
+    //   // })
+    //   // axios.get(url, {
+    //   //   params: {
+    //   //     id: '606ae579cdb2ca093653a88d'
+    //   //   },
+    //   //   paramsSerializer: function(params) {
+    //   //     return qs.stringify(params, { arrayFormat: 'brackets' })
+    //   //   },
+    //   //   headers: {
+    //   //     'Content-Type': 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet'
+    //   //   },
+    //   //   responseType: 'blob'
+    //   // }).then(response => {
+    //   //   this.pdf_url = this.getObjectURL(response.data)
+    //   //   this.pdfCurrentPage = 1
+    //   // })
+    //   this.pdf_obj.id = '606ae579cdb2ca093653a88d'
+    //   axios({
+    //     method: 'post',
+    //     url: url,
+    //     data: this.pdf_obj,
+    //     responseType: 'blob'
+    //   }).then(response => {
+    //     console.log(response)
+    //     this.pdf_url = this.getObjectURL(response.data)
+    //   })
+    // },
+    // // 处理文件流
+    // getObjectURL(file) {
+    //   let url = null
+    //   if (window.createObjectURL !== undefined) { // basic
+    //     url = window.createObjectURL(file)
+    //   } else if (window.webkitURL !== undefined) { // webkit or chrome
+    //     try {
+    //       url = window.webkitURL.createObjectURL(file)
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    //   } else if (window.URL !== undefined) { // mozilla(firefox)
+    //     try {
+    //       url = window.URL.createObjectURL(file)
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    //   }
+    //   return url
+    // },
+    // changePdfPage (val) {
+    //   // console.log(val)
+    //   if (val === 0 && this.pdfCurrentPage > 1) {
+    //     this.pdfCurrentPage--
+    //     // console.log(this.currentPage)
+    //   }
+    //   if (val === 1 && this.pdfCurrentPage < this.pageCount) {
+    //     this.pdfCurrentPage++
+    //     // console.log(this.currentPage)
+    //   }
+    // },
+    // // pdf加载时
+    // loadPdfHandler (e) {
+    //   this.pdfCurrentPage = 1 // 加载的时候先加载第一页
+    //   console.log(this.pageCount)
+    // },
     // 获取后台文章的文章列表
     getReference() {
-      const url = 'http://localhost:10088/reference/' + this.name
+      const url = 'http://localhost:10088/Pdf/getPdfInfo'
       this.listLoading = true
       axios.get(url).then((response) => {
         console.log(response)
         const { data } = response
         this.list = data
         this.list1 = this.list
-
-        console.log(888888) // test
-        console.log(this.list) // test
-        console.log(this.list[0].id)
         this.listLoading = false
         this.oldList = this.list.map((v) => v.id)
         this.newList = this.oldList.slice()
@@ -278,7 +296,9 @@ export default {
     // 进入下一层页面
     nextPage(obj) {
       console.log(obj)
-      console.log(this.name)
+      let id = obj.id
+      console.log(id.slice(19, id.length - 1))
+      id = id.slice(19, id.length - 1)
       // const url = 'http://localhost:10088/reference/get'
       // const query = {
       //   category: 'search',
@@ -287,18 +307,11 @@ export default {
       // axios.post(url, query).then((response) => {
       //   console.log(response)
       // })
+
       this.$router.push({
         path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/electronicDocumentContent',
         query: {
-          id: obj.id,
-          title: obj.title,
-          author: obj.author,
-          date: obj.date,
-          journal: obj.journal,
-          src: obj.src,
-          summary: obj.summary,
-          keywords: obj.keywords,
-          document_type: this.name
+          id: id
         }
       })
     },
