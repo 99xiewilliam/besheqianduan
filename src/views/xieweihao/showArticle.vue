@@ -54,7 +54,7 @@
               class="right"
               @click="addFileMark()"
             >提交</el-button>
-            <el-button class="right" @click="handleSkip">下一篇</el-button>
+            <el-button class="right" @click="handleSkip()">下一篇</el-button>
           </div>
           <el-scrollbar
             style="height: 100%"
@@ -144,14 +144,16 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      title: this.$route.query.title,
-      author: this.$route.query.author,
-      date: this.$route.query.date,
-      journal: this.$route.query.journal,
-      src: this.$route.query.src,
-      summary: this.$route.query.summary,
-      keywords: this.$route.query.keywords,
+      title: '',
+      author: '',
+      date: '',
+      journal: '',
+      src: '',
+      summary: '',
+      keywords: '',
+      list: this.$route.query.list,
       activeName: 'first',
+      document_type: this.$route.query.document_type,
       labels: [
 
       ],
@@ -237,7 +239,18 @@ export default {
   },
   methods: {
     // 获取后台文章的摘要等信息
-    getData() {
+    async getData() {
+      const url = 'http://localhost:10088/reference/getOnePaper'
+      await axios.post(url, this.id).then((response) => {
+        console.log(response)
+        this.summary = response.data.summary
+        this.author = response.data.author
+        this.date = response.data.date
+        this.journal = response.data.journal
+        this.keywords = response.data.keywords
+        this.src = response.data.src
+        this.title = response.data.title
+      })
       this.targetText =
         '摘要：' +
         this.summary +
@@ -258,8 +271,8 @@ export default {
         this.src
       document.getElementById('content-area').innerHTML = this.targetText
       this.targetTextArr = this.targetText.split('')
-      const url = 'http://localhost:10088/Entities/entity'
-      axios.get(url).then((response) => {
+      const url1 = 'http://localhost:10088/Entities/entity'
+      await axios.get(url1).then((response) => {
         const datas = response.data
         for (var data in datas) {
           const a = {
@@ -287,21 +300,15 @@ export default {
       console.log(tab, event)
       console.log(tab.$options.propsData.label)
       console.log('到关系')
-      console.log(this.$route.query.document_type)
+      console.log(this.document_type)
       if (tab.$options.propsData.label === '关系标注') {
         this.$router.push({
           path:
             '/xieweihao/Document_information_extraction/Paper/anotationRelation',
           query: {
-            title: this.title,
-            author: this.author,
-            date: this.date,
-            journal: this.journal,
-            src: this.src,
-            summary: this.summary,
-            keywords: this.keywords,
-            document_id: this.id,
-            document_type: this.$route.query.document_type
+            id: this.id,
+            list: this.list,
+            document_type: this.document_type
           }
         })
       }
@@ -575,7 +582,7 @@ export default {
     // 添加标注
     addFileMark() {
       this.fileMark.document_id = this.id
-      this.fileMark.document_type = this.$route.query.document_type
+      this.fileMark.document_type = this.$route.query.name
       this.fileMark.object_marks = []
       this.fileMark.relation_marks = []
       this.getTime()
@@ -655,18 +662,36 @@ export default {
       })
     },
     routeBack() {
-      console.log(this.$route.query.document_type)
       this.$router.push({
-        path: '/xieweihao/Document_information_extraction/' + this.$route.query.document_type,
+        path: '/xieweihao/Document_information_extraction/Paper',
         query: {
-          name: this.$route.query.document_type
+          name: this.document_type
         }
       })
     },
     saveInfo() {
 
     },
-    handleSkip() {},
+    handleSkip() {
+      let judge = 0
+      for (let i = 0; i < this.list.length; i++) {
+        if (judge === 1) {
+          this.id = this.list[i].id
+          break
+        }
+        if (this.id === this.list[i].id) {
+          judge = 1
+        }
+      }
+      this.getData()
+      // this.$router.push({
+      //   path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
+      //   query: {
+      //     id: this.id,
+      //     list: this.list
+      //   }
+      // })
+    },
     handleSubmit() {}
   }
 }

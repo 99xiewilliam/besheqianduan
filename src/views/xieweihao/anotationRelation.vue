@@ -307,14 +307,14 @@ export default {
   data() {
     return {
       judge: 0,
-      document_id: this.$route.query.document_id,
-      title: this.$route.query.title,
-      author: this.$route.query.author,
-      date: this.$route.query.date,
-      journal: this.$route.query.journal,
-      src: this.$route.query.src,
-      summary: this.$route.query.summary,
-      keywords: this.$route.query.keywords,
+      id: this.$route.query.id,
+      title: '',
+      author: '',
+      date: '',
+      journal: '',
+      src: '',
+      summary: '',
+      keywords: '',
       activeName: 'second',
       labels: [
         {
@@ -370,7 +370,7 @@ export default {
       advice: '',
       group: true,
       fileMark: {
-        document_id: this.$route.query.document_id,
+        document_id: this.$route.query.id,
         document_type: this.$route.query.document_type,
         type: '',
         object_marks: [
@@ -416,18 +416,29 @@ export default {
     }
   },
   mounted() {
-    this.getData()
+    // this.getData()
     this.getEntityChioce()
     this.$nextTick(() => {
       this.getAnnotate()
     })
   },
   created() {
-    // this.getData()
+    this.getData()
   },
   methods: {
     // 获取后台文章摘要
-    getData() {
+    async getData() {
+      const url = 'http://localhost:10088/reference/getOnePaper'
+      await axios.post(url, this.id).then((response) => {
+        console.log(response)
+        this.summary = response.data.summary
+        this.author = response.data.author
+        this.date = response.data.date
+        this.journal = response.data.journal
+        this.keywords = response.data.keywords
+        this.src = response.data.src
+        this.title = response.data.title
+      })
       this.targetText =
         '摘要：' +
         this.summary +
@@ -447,11 +458,10 @@ export default {
         '知识来源：' +
         this.src
       document.getElementById('content-area').innerHTML = this.targetText
-
       this.targetTextArr = this.targetText.split('')
 
-      const url = 'http://localhost:10088/Relations/relation'
-      axios.get(url).then((response) => {
+      const url1 = 'http://localhost:10088/Relations/relation'
+      axios.get(url1).then((response) => {
         const datas = response.data
         for (var data in datas) {
           const a = {
@@ -803,14 +813,8 @@ export default {
         this.$router.push({
           path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
           query: {
-            title: this.title,
-            author: this.author,
-            date: this.date,
-            journal: this.journal,
-            src: this.src,
-            summary: this.summary,
-            keywords: this.keywords,
-            id: this.document_id,
+            id: this.id,
+            list: this.$route.query.list,
             document_type: this.document_type
           }
         })
@@ -931,18 +935,11 @@ export default {
     routeBack() {
       console.log('跳转标记')
       console.log(this.document_type)
-
       this.$router.push({
         path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
         query: {
-          title: this.title,
-          author: this.author,
-          date: this.date,
-          journal: this.journal,
-          src: this.src,
-          summary: this.summary,
-          keywords: this.keywords,
-          id: this.document_id,
+          id: this.id,
+          list: this.$route.query.list,
           document_type: this.document_type
         }
       })

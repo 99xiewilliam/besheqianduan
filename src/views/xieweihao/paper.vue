@@ -28,7 +28,6 @@
       电子文档预览
     </el-button>
     <el-table
-      ref="dragTable"
       v-loading="listLoading"
       :data="nowTable"
       :row-key="getRowKey"
@@ -99,20 +98,20 @@
 
 <script>
 import { fetchList } from '@/api/article'
-import Sortable from 'sortablejs'
+// import Sortable from 'sortablejs'
 import axios from 'axios'
 
 export default {
   name: 'DragTable',
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        true: 'success',
-        false: 'info'
-        // false: 'danger'
-      }
-      return statusMap[status]
-    }
+    // statusFilter(status) {
+    //   // const statusMap = {
+    //   //   true: 'success',
+    //   //   false: 'info'
+    //   //   // false: 'danger'
+    //   // }
+    //   return statusMap[status]
+    // }
   },
   data() {
     return {
@@ -183,6 +182,8 @@ export default {
     },
     // 获取后台文章的文章列表
     getReference() {
+      this.name = this.$route.query.name
+      console.log(this.name)
       const url = 'http://localhost:10088/reference/' + this.name
       this.listLoading = true
       axios.get(url).then((response) => {
@@ -218,13 +219,7 @@ export default {
         path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
         query: {
           id: obj.id,
-          title: obj.title,
-          author: obj.author,
-          date: obj.date,
-          journal: obj.journal,
-          src: obj.src,
-          summary: obj.summary,
-          keywords: obj.keywords,
+          list: this.list,
           document_type: this.name
         }
       })
@@ -299,25 +294,25 @@ export default {
       return []
     },
     setSort() {
-      const el = this.$refs.dragTable.$el.querySelectorAll(
-        '.el-table__body-wrapper > table > tbody'
-      )[0]
-      this.sortable = Sortable.create(el, {
-        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
-        setData: function(dataTransfer) {
-          // to avoid Firefox bug
-          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
-          dataTransfer.setData('Text', '')
-        },
-        onEnd: (evt) => {
-          const targetRow = this.list.splice(evt.oldIndex, 1)[0]
-          this.list.splice(evt.newIndex, 0, targetRow)
+      // const el = this.$refs.dragTable.$el.querySelectorAll(
+      //   '.el-table__body-wrapper > table > tbody'
+      // )[0]
+      // this.sortable = Sortable.create(el, {
+      //   ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+      //   setData: function(dataTransfer) {
+      //     // to avoid Firefox bug
+      //     // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+      //     dataTransfer.setData('Text', '')
+      //   },
+      //   onEnd: (evt) => {
+      //     const targetRow = this.list.splice(evt.oldIndex, 1)[0]
+      //     this.list.splice(evt.newIndex, 0, targetRow)
 
-          // for show the changes, you can delete in you code
-          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
-          this.newList.splice(evt.newIndex, 0, tempIndex)
-        }
-      })
+      //     // for show the changes, you can delete in you code
+      //     const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+      //     this.newList.splice(evt.newIndex, 0, tempIndex)
+      //   }
+      // })
     }
   }
 }
