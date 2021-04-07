@@ -98,20 +98,20 @@
 
 <script>
 import { fetchList } from '@/api/article'
-// import Sortable from 'sortablejs'
+import Sortable from 'sortablejs'
 import axios from 'axios'
 
 export default {
   name: 'DragTable',
   filters: {
-    // statusFilter(status) {
-    //   // const statusMap = {
-    //   //   true: 'success',
-    //   //   false: 'info'
-    //   //   // false: 'danger'
-    //   // }
-    //   return statusMap[status]
-    // }
+    statusFilter(status) {
+      const statusMap = {
+        true: 'success',
+        false: 'info'
+        //false: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
