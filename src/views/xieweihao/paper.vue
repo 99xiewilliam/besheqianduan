@@ -286,7 +286,10 @@ export default {
     },
     goToElectronicDocument() {
       this.$router.push({
-        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument'
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument',
+        query: {
+          document_type: this.name
+        }
       })
     },
     loadAll() {

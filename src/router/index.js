@@ -421,9 +421,9 @@ export const asyncRoutes = [
         hidden: true
       },
       {
-        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/electronicDocumentContent',
-        component: () => import('@/views/xieweihao/electronicDocumentContent'),
-        name: 'electronicDocumentContent',
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfEntity',
+        component: () => import('@/views/xieweihao/pdfEntity'),
+        name: 'pdfEntity',
         meta: { title: ' 电子文档内容', icon: 'theme' },
         hidden: true
       }

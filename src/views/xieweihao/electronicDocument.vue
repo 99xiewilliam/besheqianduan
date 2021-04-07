@@ -119,8 +119,8 @@ export default {
       // },
       // pdfCurrentPage: 0,
       // pageCount: 0,
+      document_type: this.$route.query.document_type,
       count: 1,
-      name: this.$route.query.name,
       list: [],
       list1: [],
       total: null,
@@ -165,8 +165,6 @@ export default {
     async getList() {
       this.listLoading = true
       const { data } = await fetchList(this.listQuery)
-      console.log('909090909090')
-      console.log(this.list)
       this.list = data.items
       this.list1 = this.list
       this.listLoading = false
@@ -183,7 +181,6 @@ export default {
       row.rowIndex = rowIndex
     },
     computeTableIndex(row) {
-      console.log('123131')
       return (this.currentPage - 1) * this.pagesize + row.rowIndex + 1
     },
     goBack() {
@@ -281,7 +278,6 @@ export default {
       const url = 'http://localhost:10088/Pdf/getPdfInfo'
       this.listLoading = true
       axios.get(url).then((response) => {
-        console.log(response)
         const { data } = response
         this.list = data
         this.list1 = this.list
@@ -309,9 +305,10 @@ export default {
       // })
 
       this.$router.push({
-        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/electronicDocumentContent',
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfEntity',
         query: {
-          id: id
+          id: id,
+          document_type: this.document_type
         }
       })
     },

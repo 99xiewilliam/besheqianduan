@@ -34,7 +34,7 @@
                   @page-loaded="pdfCurrentPage=$event"
                   @loaded="loadPdfHandler"
                 /> -->
-                <iframe :src="frame_url" width="100%" height="100%">
+                <iframe :src="frame_url" width="100%" height="100%" frameborder="0">
                 </iframe> 
               
             <!-- </el-scrollbar> -->
