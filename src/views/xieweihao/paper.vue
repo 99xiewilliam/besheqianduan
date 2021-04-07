@@ -108,7 +108,7 @@ export default {
       const statusMap = {
         true: 'success',
         false: 'info'
-        //false: 'danger'
+        // false: 'danger'
       }
       return statusMap[status]
     }
@@ -264,7 +264,6 @@ export default {
         console.log(
           state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         )
-
         return (
           state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         )

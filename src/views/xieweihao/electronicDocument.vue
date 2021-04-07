@@ -132,7 +132,7 @@ export default {
       sortable: null,
       oldList: [],
       newList: [],
-      pagesize: 1,
+      pagesize: 5,
       currentPage: 1,
       state: '',
       timeout: null,
@@ -337,7 +337,7 @@ export default {
 
       const list = []
       for (const result of this.results) {
-        list.push({ value: result.title })
+        list.push({ value: result.name })
       }
 
       clearTimeout(this.timeout)
@@ -353,11 +353,11 @@ export default {
     createStateFilter(queryString) {
       return (state) => {
         console.log(
-          state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+          state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         )
 
         return (
-          state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+          state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         )
       }
     },

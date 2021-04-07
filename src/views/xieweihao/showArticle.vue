@@ -417,7 +417,6 @@ export default {
         text: this.targetText.substr(start, end - start)
 
       }
-
       this.labels[labelIndex].entitylist.push(node)
       this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
       this.addColor(labelIndex, start, end)
@@ -580,7 +579,7 @@ export default {
       this.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
     },
     // 添加标注
-    addFileMark() {
+    async addFileMark() {
       this.fileMark.document_id = this.id
       this.fileMark.document_type = this.$route.query.name
       this.fileMark.object_marks = []
@@ -632,10 +631,17 @@ export default {
       }
 
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      axios.post(url, this.fileMark).then((response) => {
+      let time = this.time
+      let document_type = this.document_type
+      await axios.post(url, this.fileMark).then((response) => {
         console.log(response)
         console.log(response.data.msg)
         if (response.data.msg === '添加成功') {
+          let url2 = 'http://localhost:10088/Item/updateTime'
+          let obj = {time: time, name: document_type}
+          axios.put(url2, obj).then((response) => {
+            console.log(response)
+          })
           this.$message({
             message: '恭喜你，添加成功',
             type: 'success'
@@ -643,6 +649,13 @@ export default {
         }
       }).catch((error) => {
         console.log(error)
+      })
+
+      const url1 = 'http://localhost:10088/reference/modify'
+      axios.put(url1, {
+        id: this.id
+      }).then((response) => {
+        console.log(response)
       })
     },
     // 选择关系

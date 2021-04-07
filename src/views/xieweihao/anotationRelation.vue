@@ -771,6 +771,15 @@ export default {
       this.showCard = true
       this.showDot = false
       this.tableShow = false
+      const length = this.labels[0].entitylist.length
+      const length1 = this.label1[0].entitylist.length
+      for (let j = length - 1; j >= 0; j--) {
+        this.removeEntity(0, j)
+      }
+
+      for (let i = length1 - 1; i >= 0; i--) {
+        this.removeEntity1(0, i)
+      }
     },
     showCardDisaper() {
       this.showCard = false
@@ -851,7 +860,7 @@ export default {
       }
     },
     // 让table显现出来让card消失
-    checkRelation() {
+    async checkRelation() {
       this.tableShow = true
       this.showCard2 = false
       this.showDot = true
@@ -903,8 +912,15 @@ export default {
       this.fileMark.relation_marks.push(obj)
       this.isgroup.push(this.group)
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      axios.post(url, this.fileMark).then((response) => {
+      let time = this.time
+      let document_type = this.document_type
+     await axios.post(url, this.fileMark).then((response) => {
         if (response.data.msg === '添加成功') {
+          let url2 = 'http://localhost:10088/Item/updateTime'
+          let obj = {time: time, name: document_type}
+          axios.put(url2, obj).then((response) => {
+            console.log(response)
+          })
           this.$message({
             message: '恭喜你，添加成功',
             type: 'success'
@@ -912,6 +928,13 @@ export default {
         }
       }).catch((error) => {
         console.log(error)
+      })
+
+      const url1 = 'http://localhost:10088/reference/modify'
+      axios.put(url1, {
+        id: this.id
+      }).then((response) => {
+        console.log(response)
       })
     },
     // 获取后台实体名

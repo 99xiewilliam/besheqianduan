@@ -31,14 +31,15 @@
 
       <el-table-column class-name="status-col" label="状态" width="110">
         <template slot-scope="{row}">
-          <el-tag :type="row.state | statusFilter">
+          <!-- <el-tag :type="row.state | statusFilter">
             <span v-if="row.state == true">已标注</span>
             <span v-else>未标注</span>
-          </el-tag>
+          </el-tag> -->
+          <el-progress type="circle" :width="circleWidth" :percentage="(row.mark_num / row.sum_num).toFixed(2)*100" status="success"></el-progress>
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" label="文档总数">
+      <el-table-column width="140px" label="文档总数">
         <template slot-scope="{row}">
           <span>{{ row.sum_num }}</span>
         </template>
@@ -99,6 +100,7 @@ export default {
   // },
   data() {
     return {
+      circleWidth: 40,
       save: null,
       count: 1,
       list: [],
