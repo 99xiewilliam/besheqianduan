@@ -15,26 +15,28 @@
           <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
             <div class="content-container">
               <!-- <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;"> -->
-              <button
+              <!-- <button
                 @click="logContent"
               >
                 log content
-              </button>
-              <div class="pdf">
-                <p class="arrow">
+              </button> -->
+            
+                <!-- <p class="arrow">
                   <span class="turn" :class="{grey: pdfCurrentPage==1}" @click="changePdfPage(0)">Preview</span>
                   {{ pdfCurrentPage }} / {{ pageCount }}
                   <span class="turn" :class="{grey: pdfCurrentPage==pageCount}" @click="changePdfPage(1)">Next</span>
-                </p>
-                <pdf
+                </p> -->
+                <!-- <pdf
                   ref="pdf"
                   :src="pdf_url"
                   :page="pdfCurrentPage"
                   @num-pages="pageCount=$event"
                   @page-loaded="pdfCurrentPage=$event"
                   @loaded="loadPdfHandler"
-                />
-              </div>
+                /> -->
+                <iframe :src="frame_url" width="100%" height="100%">
+                </iframe> 
+              
             <!-- </el-scrollbar> -->
             </div>
           </el-scrollbar>
@@ -79,6 +81,7 @@ export default {
   components: { splitPane, pdf },
   data() {
     return {
+      frame_url: '',
       pdf_url: '',
       pdf_obj: {
         'id': this.$route.query.id
@@ -132,7 +135,8 @@ export default {
   },
   methods: {
     getPdfData() {
-      const url = 'http://localhost:10088/Pdf/getPdf'
+      
+      const url = 'http://localhost:10088/Pdf/getPdfNew'
       // axios.get(url).then((response) => {
       //   console.log(response)
       //   console.log(typeof response.data[0].base64)
@@ -179,7 +183,17 @@ export default {
         responseType: 'blob'
       }).then(response => {
         console.log(response)
-        this.pdf_url = this.getObjectURL(response.data)
+        //this.pdf_url = this.getObjectURL(response.data)
+        
+        this.pdf_url = window.URL.createObjectURL(response.data)
+        this.frame_url = `./pdfjs-2/web/viewer.html?file=${this.pdf_url}`
+        //encodeURIComponent
+        //this.pdf_url = encodeURIComponent(response.data)
+        //this.pdf_url = this.pdf_url + '&.pdf'
+        //this.pdf_url = this.pdf_url + '.pdf'
+        //this.pdf_url = encodeURIComponent(this.pdf_url)
+        console.log(this.pdf_url)
+        //window.open('/public/pdfjs-2/web/viewer.html?file=' + this.pdf_url);
       })
     },
     // 处理文件流
