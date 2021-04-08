@@ -912,12 +912,12 @@ export default {
       this.fileMark.relation_marks.push(obj)
       this.isgroup.push(this.group)
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      let time = this.time
-      let document_type = this.document_type
-     await axios.post(url, this.fileMark).then((response) => {
+      const time = this.time
+      const document_type = this.document_type
+      await axios.post(url, this.fileMark).then((response) => {
         if (response.data.msg === '添加成功') {
-          let url2 = 'http://localhost:10088/Item/updateTime'
-          let obj = {time: time, name: document_type}
+          const url2 = 'http://localhost:10088/Item/updateTime'
+          const obj = { time: time, name: document_type }
           axios.put(url2, obj).then((response) => {
             console.log(response)
           })

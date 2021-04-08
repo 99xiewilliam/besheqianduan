@@ -16,8 +16,8 @@
       <template slot="paneL">
         <el-card class="box-card">
           <div class="content-container">
-            <iframe :src="frame_url" width="100%" height="100%" frameborder="0">
-            </iframe> 
+            <iframe :src="frame_url" width="100%" height="100%" frameborder="0" id="myIframe">
+            </iframe>
           </div>
         </el-card>
       </template>
@@ -60,7 +60,7 @@
                       v-if="noShowList[index]"
                       class="right inline el-icon-caret-left"
                     />
-                    <el-checkbox
+                    <!-- <el-checkbox
                       v-model="entitylist[index]"
                       class="right inline"
                       type="warning"
@@ -68,7 +68,7 @@
                       label="连续标注模式"
                       border
                       @change="(value) => handleContinuousChange(value, index)"
-                    />
+                    /> -->
                     <el-button
                       class="right inline"
                       type="primary"
@@ -86,14 +86,10 @@
                     >
                       <div
                         class="test-entity-block"
-                        @mouseover="handleEntityMouseOver(entity)"
-                        @mouseout="handleEntityMouseOut(entity)"
+                        
                       >
                         <span class="test-entity-text">{{
-                          targetText.substr(
-                            entity.start,
-                            entity.end - entity.start
-                          )
+                          entity.text
                         }}</span>
                         <el-button
                           class="test-button"
@@ -125,6 +121,7 @@ export default {
   components: { splitPane },
   data() {
     return {
+      selectText: '',
       frame_url: '',
       pdf_url: '',
       pdf_obj: {
@@ -216,6 +213,7 @@ export default {
   mounted() {
     this.getData()
     this.getRelationChoice()
+    this.switchPoint()
     this.$nextTick(() => {
       this.getAnnotate()
     })
@@ -225,6 +223,44 @@ export default {
     this.getPdfData()
   },
   methods: {
+    switchPoint() {
+      let vm = this
+      let iframe = document.getElementById("myIframe")
+      let x1 = ''
+      let x2 = ''
+      let y1 = ''
+      let y2 = ''
+      iframe.onload = function () {
+        iframe.contentDocument.addEventListener('mousedown', function (e) {
+          x1 = e.pageX
+          y1 = e.pageY
+        }, true)
+
+        iframe.contentDocument.addEventListener('mouseup', function (e) {
+          x2 = e.pageX
+          y2 = e.pageY
+          if (x1 === x2 && y1 === y2) return;
+          var choose = iframe.contentWindow.getSelection().toString()
+          vm.selectText = choose
+          console.log('selected words')
+          console.log(vm.selectText)
+        }, true)
+      }
+    },
+    sendMessage() {
+      let vm = this
+      let iframe = document.getElementById('myIframe')
+      iframe.contentWindow.postMessage(vm.selectText, "*")
+    },
+    getMessage() {
+      let iframe = document.getElementById('myIframe')
+      iframe.contentWindow.addEventListener('message', function (e) {
+        console.log(e.data)
+        iframe.contentWindow.PDFViewerApplication.findBar.findField.value = e.data
+        iframe.contentWindow.PDFViewerApplication.findBar.highlightAll.checked = true
+        iframe.contentWindow.PDFViewerApplication.findBar.dispatchEvent('highlightallchange')
+      }, false)
+    },
     // 获取后台文章的摘要等信息
     getPdfData() {
       const url = 'http://localhost:10088/Pdf/getPdfNew'
@@ -358,33 +394,34 @@ export default {
     // 单个实体添加模式
     handleSingleAdd(index) {
       var self = this
-      var selection = window.getSelection()
+      //var selection = window.getSelection()
       this.curMarkLabel = index
       this.continuousMark = false
       this.noShowList[index] = !this.noShowList[index] // Undo Extra Show Action
       console.log(this.noShowList[index])
-      if (
-        !selection.isCollapsed &&
-        selection.focusNode.parentElement.className === 'content-area' &&
-        selection.anchorNode.parentElement.className === 'content-area'
-      ) {
-        // 进行标记
-        var start = selection.focusOffset
-        var end = selection.anchorOffset
-        if (start > end) {
-          var tmp = start
-          start = end
-          end = tmp
-        }
-        self.addEntity(self.curMarkLabel, start, end)
-        window.getSelection().removeAllRanges()
-        // 后处理
-        if (!self.continuousMark) {
-          self.curMarkLabel = -1
-        }
-      } else {
-        console.log('heme')
-      }
+      self.addEntity(self.curMarkLabel)
+      // if (
+      //   !selection.isCollapsed &&
+      //   selection.focusNode.parentElement.className === 'content-area' &&
+      //   selection.anchorNode.parentElement.className === 'content-area'
+      // ) {
+      //   // 进行标记
+      //   var start = selection.focusOffset
+      //   var end = selection.anchorOffset
+      //   if (start > end) {
+      //     var tmp = start
+      //     start = end
+      //     end = tmp
+      //   }
+      //   self.addEntity(self.curMarkLabel, start, end)
+      //   window.getSelection().removeAllRanges()
+      //   // 后处理
+      //   if (!self.continuousMark) {
+      //     self.curMarkLabel = -1
+      //   }
+      // } else {
+      //   console.log('heme')
+      // }
     },
     // 连续实体添加模式按钮点击处理
     handleContinuousChange(value, index) {
@@ -408,39 +445,43 @@ export default {
       }
     },
     // 高亮悬停实体 实体抽取和关系抽取可以复用
-    handleEntityMouseOver(entity) {
-      var fixPos = document.documentElement.scrollTop
-      document.getElementById('token_' + entity.start).scrollIntoView(false)
-      document.documentElement.scrollTop = fixPos
-      // Add highlight class to entity
-      for (var i = entity.start; i < entity.end; i++) {
-        document.getElementById('token_' + i).className =
-          document.getElementById('token_' + i).className + 'highlight-color'
-      }
-    },
-    // 取消高亮 实体抽取和关系抽取可以复用
-    handleEntityMouseOut(entity) {
-      // Remove highlight class from entity
-      for (var i = entity.start; i < entity.end; i++) {
-        document.getElementById(
-          'token_' + i
-        ).className = document
-          .getElementById('token_' + i)
-          .className.replace('highlight-color', '')
-      }
-    },
+    // handleEntityMouseOver(entity) {
+    //   var fixPos = document.documentElement.scrollTop
+    //   document.getElementById('token_' + entity.start).scrollIntoView(false)
+    //   document.documentElement.scrollTop = fixPos
+    //   // Add highlight class to entity
+    //   for (var i = entity.start; i < entity.end; i++) {
+    //     document.getElementById('token_' + i).className =
+    //       document.getElementById('token_' + i).className + 'highlight-color'
+    //   }
+    // },
+    // // 取消高亮 实体抽取和关系抽取可以复用
+    // handleEntityMouseOut(entity) {
+    //   // Remove highlight class from entity
+    //   for (var i = entity.start; i < entity.end; i++) {
+    //     document.getElementById(
+    //       'token_' + i
+    //     ).className = document
+    //       .getElementById('token_' + i)
+    //       .className.replace('highlight-color', '')
+    //   }
+    // },
     // 向lables数组添加实体同时为实体添加背景色 实体抽取和关系抽取 可以部分复用的函数
-    addEntity(labelIndex, start, end) {
+    addEntity(labelIndex) {
       // Add Entity, Add Mark
+      const text = this.selectText
       var node = {
-        start: start,
-        end: end,
-        text: this.targetText.substr(start, end - start)
-
+        text: text
       }
-      this.labels[labelIndex].entitylist.push(node)
-      this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
-      this.addColor(labelIndex, start, end)
+      if (text !== '') {
+        this.labels[labelIndex].entitylist.push(node)
+        // this.sendMessage()
+        // this.getMessage()
+        this.selectText = ''
+        this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
+      }
+      
+      //this.addColor(labelIndex, start, end)
     },
     // 为实体添加背景色
     addColor(labelIndex, start, end) {
@@ -455,23 +496,23 @@ export default {
     // 从labels中移除实体，去除背景色 不能复用的函数，但是实体抽取和关系抽取可以相互参考
     removeEntity(labelIndex, entityIndex) {
       // Remove Entity, Remove Mark
-      var start = this.labels[labelIndex].entitylist[entityIndex].start
-      var end = this.labels[labelIndex].entitylist[entityIndex].end
-      for (var i = start; i < end; i++) {
-        var raw = document.getElementById('token_' + i).className
-        var target = 'dot-color-' + this.labels[labelIndex].color + ' '
-        // 移除实体颜色
-        document.getElementById('token_' + i).className = raw.replace(
-          target,
-          ''
-        )
-        // 移除高亮
-        document.getElementById(
-          'token_' + i
-        ).className = document
-          .getElementById('token_' + i)
-          .className.replace('highlight-color', '')
-      }
+      // var start = this.labels[labelIndex].entitylist[entityIndex].start
+      // var end = this.labels[labelIndex].entitylist[entityIndex].end
+      // for (var i = start; i < end; i++) {
+      //   var raw = document.getElementById('token_' + i).className
+      //   var target = 'dot-color-' + this.labels[labelIndex].color + ' '
+      //   // 移除实体颜色
+      //   document.getElementById('token_' + i).className = raw.replace(
+      //     target,
+      //     ''
+      //   )
+      //   // 移除高亮
+      //   document.getElementById(
+      //     'token_' + i
+      //   ).className = document
+      //     .getElementById('token_' + i)
+      //     .className.replace('highlight-color', '')
+      // }
       // 从labels数组中移除entity
       this.labels[labelIndex].entitylist.splice(entityIndex, 1)
       this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
@@ -602,7 +643,7 @@ export default {
     // 添加标注
     async addFileMark() {
       this.fileMark.document_id = this.id
-      this.fileMark.document_type = this.$route.query.name
+      this.fileMark.document_type = this.$route.query.document_type
       this.fileMark.object_marks = []
       this.fileMark.relation_marks = []
       this.getTime()
@@ -652,14 +693,14 @@ export default {
       }
 
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      let time = this.time
-      let document_type = this.document_type
+      const time = this.time
+      const document_type = this.document_type
       await axios.post(url, this.fileMark).then((response) => {
         console.log(response)
         console.log(response.data.msg)
         if (response.data.msg === '添加成功') {
-          let url2 = 'http://localhost:10088/Item/updateTime'
-          let obj = {time: time, name: document_type}
+          const url2 = 'http://localhost:10088/Item/updateTime'
+          const obj = { time: time, name: document_type }
           axios.put(url2, obj).then((response) => {
             console.log(response)
           })
@@ -672,12 +713,12 @@ export default {
         console.log(error)
       })
 
-      const url1 = 'http://localhost:10088/reference/modify'
-      axios.put(url1, {
-        id: this.id
-      }).then((response) => {
-        console.log(response)
-      })
+      // const url1 = 'http://localhost:10088/reference/modify'
+      // axios.put(url1, {
+      //   id: this.id
+      // }).then((response) => {
+      //   console.log(response)
+      // })
     },
     // 选择关系
     getRelationChoice() {

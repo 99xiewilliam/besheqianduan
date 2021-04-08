@@ -20,13 +20,13 @@
               >
                 log content
               </button> -->
-            
-                <!-- <p class="arrow">
+
+              <!-- <p class="arrow">
                   <span class="turn" :class="{grey: pdfCurrentPage==1}" @click="changePdfPage(0)">Preview</span>
                   {{ pdfCurrentPage }} / {{ pageCount }}
                   <span class="turn" :class="{grey: pdfCurrentPage==pageCount}" @click="changePdfPage(1)">Next</span>
                 </p> -->
-                <!-- <pdf
+              <!-- <pdf
                   ref="pdf"
                   :src="pdf_url"
                   :page="pdfCurrentPage"
@@ -34,9 +34,8 @@
                   @page-loaded="pdfCurrentPage=$event"
                   @loaded="loadPdfHandler"
                 /> -->
-                <iframe :src="frame_url" width="100%" height="100%" frameborder="0">
-                </iframe> 
-              
+              <iframe :src="frame_url" width="100%" height="100%" frameborder="0" />
+
             <!-- </el-scrollbar> -->
             </div>
           </el-scrollbar>
