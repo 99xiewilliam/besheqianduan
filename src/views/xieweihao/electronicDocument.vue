@@ -184,7 +184,12 @@ export default {
       return (this.currentPage - 1) * this.pagesize + row.rowIndex + 1
     },
     goBack() {
-      this.$router.back(-1)
+      this.$router.push({
+        path: '/xieweihao/Document_information_extraction/Paper',
+        query: {
+          name: this.document_type
+        }
+      })
     },
     // getPdfData() {
     //   const url = 'http://localhost:10088/Pdf/getPdf'
@@ -308,7 +313,8 @@ export default {
         path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfEntity',
         query: {
           id: id,
-          document_type: this.document_type
+          document_type: this.document_type,
+          list: this.list
         }
       })
     },

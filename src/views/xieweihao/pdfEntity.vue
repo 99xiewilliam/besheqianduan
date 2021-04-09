@@ -121,6 +121,7 @@ export default {
   components: { splitPane },
   data() {
     return {
+      list: this.$route.query.list,
       selectText: '',
       frame_url: '',
       pdf_url: '',
@@ -354,14 +355,12 @@ export default {
     },
     // 跳转到关系标注页面
     handleClick(tab, event) {
-      console.log(tab, event)
-      console.log(tab.$options.propsData.label)
       console.log('到关系')
       console.log(this.document_type)
       if (tab.$options.propsData.label === '关系标注') {
         this.$router.push({
           path:
-            '/xieweihao/Document_information_extraction/Paper/anotationRelation',
+            '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfRelation',
           query: {
             id: this.id,
             list: this.list,
@@ -748,17 +747,23 @@ export default {
 
     },
     handleSkip() {
+      console.log('handleSkip')
+      console.log(this.list)
       let judge = 0
+      
       for (let i = 0; i < this.list.length; i++) {
         if (judge === 1) {
-          this.id = this.list[i].id
+          this.pdf_obj.id = this.list[i].id.slice(19, this.list[i].id.length - 1)
           break
         }
-        if (this.id === this.list[i].id) {
+        if (this.id === this.list[i].id.slice(19, this.list[i].id.length - 1)) {
           judge = 1
         }
       }
-      this.getData()
+      console.log(this.id)
+      this.id = this.pdf_obj.id
+      console.log(this.pdf_obj.id)
+      this.getPdfData()
       // this.$router.push({
       //   path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
       //   query: {

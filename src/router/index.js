@@ -424,7 +424,14 @@ export const asyncRoutes = [
         path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfEntity',
         component: () => import('@/views/xieweihao/pdfEntity'),
         name: 'pdfEntity',
-        meta: { title: ' 电子文档内容', icon: 'theme' },
+        meta: { title: ' 电子文档实体内容', icon: 'theme' },
+        hidden: true
+      },
+      {
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfRelation',
+        component: () => import('@/views/xieweihao/pdfRelation'),
+        name: 'pdfEntity',
+        meta: { title: ' 电子文档关系内容', icon: 'theme' },
         hidden: true
       }
     ]

@@ -12,30 +12,13 @@
       </el-tabs>
     </aside>
 
-    <h1>{{ "标题：" + title }}</h1>
+   
     <split-pane split="vertical" @resize="resize">
       <template slot="paneL">
         <el-card class="box-card">
           <div class="content-container">
-            <xmp id="content-area" class="content-area" @mouseup="handleSelect">
-              <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
-              {{ targetText }}
-              </el-scrollbar>
-            </xmp>
-            <span id="mark-area" class="mark-area transparent">
-              <el-scrollbar
-                style="height: 100%"
-                wrap-style="overflow-x:hidden;"
-              >
-                <span
-                  v-for="(char, index) in targetTextArr"
-                  :key="index"
-                  class="transparent"
-                >
-                  <span :id="`token_${index}`">{{ char }}</span>
-                </span>
-              </el-scrollbar>
-            </span>
+            <iframe :src="frame_url" width="100%" height="100%" frameborder="0" id="myIframe">
+            </iframe>
           </div>
         </el-card>
       </template>
@@ -46,47 +29,7 @@
               <h2>添加关系</h2>
               <hr>
             </el-header>
-            <!-- <div v-show="tableShow">
-              <el-table
-                :data="tableData"
-                style="width: 100%"
-                max-height="250"
-              >
-
-                <el-table-column
-                  prop="addedRelation"
-                  label="已添加关系"
-                  width="120"
-                />
-                <el-table-column
-                  label="是否为关系组"
-                  width="300"
-                >
-                  <template slot-scope="scope">
-                    <el-switch
-                      v-model="isgroup[scope.$index]"
-                      active-text="是"
-                      inactive-text="否"
-                    />
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  fixed="right"
-                  label="操作"
-                  width="120"
-                >
-                  <template slot-scope="scope">
-                    <el-button
-                      type="text"
-                      size="small"
-                      @click="deleteRow(scope.$index)"
-                    >
-                      移除
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div> -->
+            
             <el-main>
               <i
                 v-show="showDot"
@@ -307,6 +250,13 @@ export default {
   data() {
     return {
       judge: 0,
+      list: this.$route.query.list,
+      selectText: '',
+      frame_url: '',
+      pdf_url: '',
+      pdf_obj: {
+        'id': this.$route.query.id
+      },
       id: this.$route.query.id,
       title: '',
       author: '',
@@ -424,41 +374,42 @@ export default {
   },
   created() {
     this.getData()
+    this.getPdfData()
   },
   methods: {
     // 获取后台文章摘要
     async getData() {
-      const url = 'http://localhost:10088/reference/getOnePaper'
-      await axios.post(url, this.id).then((response) => {
-        console.log(response)
-        this.summary = response.data.summary
-        this.author = response.data.author
-        this.date = response.data.date
-        this.journal = response.data.journal
-        this.keywords = response.data.keywords
-        this.src = response.data.src
-        this.title = response.data.title
-      })
-      this.targetText =
-        '摘要：' +
-        this.summary +
-        '\n\n' +
-        '关键字：' +
-        this.keywords +
-        '\n\n' +
-        '作者：' +
-        this.author +
-        '\n\n' +
-        '时间：' +
-        this.date +
-        '\n\n' +
-        '期刊：' +
-        this.journal +
-        '\n\n' +
-        '知识来源：' +
-        this.src
-      document.getElementById('content-area').innerHTML = this.targetText
-      this.targetTextArr = this.targetText.split('')
+      // const url = 'http://localhost:10088/reference/getOnePaper'
+      // await axios.post(url, this.id).then((response) => {
+      //   console.log(response)
+      //   this.summary = response.data.summary
+      //   this.author = response.data.author
+      //   this.date = response.data.date
+      //   this.journal = response.data.journal
+      //   this.keywords = response.data.keywords
+      //   this.src = response.data.src
+      //   this.title = response.data.title
+      // })
+      // this.targetText =
+      //   '摘要：' +
+      //   this.summary +
+      //   '\n\n' +
+      //   '关键字：' +
+      //   this.keywords +
+      //   '\n\n' +
+      //   '作者：' +
+      //   this.author +
+      //   '\n\n' +
+      //   '时间：' +
+      //   this.date +
+      //   '\n\n' +
+      //   '期刊：' +
+      //   this.journal +
+      //   '\n\n' +
+      //   '知识来源：' +
+      //   this.src
+      // document.getElementById('content-area').innerHTML = this.targetText
+      // this.targetTextArr = this.targetText.split('')
 
       const url1 = 'http://localhost:10088/Relations/relation'
       axios.get(url1).then((response) => {
@@ -473,6 +424,79 @@ export default {
           this.options.push(a)
         }
       })
+    },
+    switchPoint() {
+      let vm = this
+      let iframe = document.getElementById("myIframe")
+      let x1 = ''
+      let x2 = ''
+      let y1 = ''
+      let y2 = ''
+      iframe.onload = function () {
+        iframe.contentDocument.addEventListener('mousedown', function (e) {
+          x1 = e.pageX
+          y1 = e.pageY
+        }, true)
+
+        iframe.contentDocument.addEventListener('mouseup', function (e) {
+          x2 = e.pageX
+          y2 = e.pageY
+          if (x1 === x2 && y1 === y2) return;
+          var choose = iframe.contentWindow.getSelection().toString()
+          vm.selectText = choose
+          console.log('selected words')
+          console.log(vm.selectText)
+        }, true)
+      }
+    },
+    sendMessage() {
+      let vm = this
+      let iframe = document.getElementById('myIframe')
+      iframe.contentWindow.postMessage(vm.selectText, "*")
+    },
+    getMessage() {
+      let iframe = document.getElementById('myIframe')
+      iframe.contentWindow.addEventListener('message', function (e) {
+        console.log(e.data)
+        iframe.contentWindow.PDFViewerApplication.findBar.findField.value = e.data
+        iframe.contentWindow.PDFViewerApplication.findBar.highlightAll.checked = true
+        iframe.contentWindow.PDFViewerApplication.findBar.dispatchEvent('highlightallchange')
+      }, false)
+    },
+    // 获取后台文章的摘要等信息
+    getPdfData() {
+      const url = 'http://localhost:10088/Pdf/getPdfNew'
+      axios({
+        method: 'post',
+        url: url,
+        data: this.pdf_obj,
+        responseType: 'blob'
+      }).then(response => {
+        console.log(response)
+        this.pdf_url = window.URL.createObjectURL(response.data)
+        this.frame_url = `./pdfjs-2/web/viewer.html?file=${this.pdf_url}`
+        console.log(this.pdf_url)
+      })
+    },
+    // 处理文件流
+    getObjectURL(file) {
+      let url = null
+      if (window.createObjectURL !== undefined) { // basic
+        url = window.createObjectURL(file)
+      } else if (window.webkitURL !== undefined) { // webkit or chrome
+        try {
+          url = window.webkitURL.createObjectURL(file)
+        } catch (error) {
+          console.log(error)
+        }
+      } else if (window.URL !== undefined) { // mozilla(firefox)
+        try {
+          url = window.URL.createObjectURL(file)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      return url
     },
     resize() {
       console.log('resize')
