@@ -579,7 +579,7 @@ export default {
       this.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
     },
     // 添加标注
-    async addFileMark() {
+    addFileMark() {
       this.fileMark.document_id = this.id
       this.fileMark.document_type = this.$route.query.name
       this.fileMark.object_marks = []
@@ -633,7 +633,7 @@ export default {
       const url = 'http://localhost:10088/FileMarks/addFileMark'
       let time = this.time
       let document_type = this.document_type
-      await axios.post(url, this.fileMark).then((response) => {
+      axios.post(url, this.fileMark).then((response) => {
         console.log(response)
         console.log(response.data.msg)
         if (response.data.msg === '添加成功') {

@@ -113,14 +113,10 @@
                                 >
                                   <div
                                     class="test-entity-block"
-                                    @mouseover="handleEntityMouseOver(entity)"
-                                    @mouseout="handleEntityMouseOut(entity)"
+                            
                                   >
                                     <span class="test-entity-text">{{
-                                      targetText.substr(
-                                        entity.start,
-                                        entity.end - entity.start
-                                      )
+                                      entity.text
                                     }}</span>
                                     <el-button
                                       class="test-button"
@@ -170,14 +166,10 @@
                                 >
                                   <div
                                     class="test-entity-block"
-                                    @mouseover="handleEntityMouseOver(entity)"
-                                    @mouseout="handleEntityMouseOut(entity)"
+                                    
                                   >
                                     <span class="test-entity-text">{{
-                                      targetText.substr(
-                                        entity.start,
-                                        entity.end - entity.start
-                                      )
+                                      entity.text
                                     }}</span>
                                     <el-button
                                       class="test-button"
@@ -367,14 +359,15 @@ export default {
   },
   mounted() {
     // this.getData()
-    this.getEntityChioce()
+    this.switchPoint()
     this.$nextTick(() => {
-      this.getAnnotate()
+      //this.getAnnotate()
     })
   },
   created() {
     this.getData()
     this.getPdfData()
+    this.getEntityChioce()
   },
   methods: {
     // 获取后台文章摘要
@@ -529,67 +522,66 @@ export default {
     handleSingleAdd(index) {
       this.judge = 0
       var self = this
-      var selection = window.getSelection()
+      //var selection = window.getSelection()
       this.curMarkLabel = index
       this.continuousMark = false
       this.noShowList[index] = !this.noShowList[index] // Undo Extra Show Action
-      console.log(this.noShowList[index])
-      if (
-        !selection.isCollapsed &&
-        selection.focusNode.parentElement.className === 'content-area' &&
-        selection.anchorNode.parentElement.className === 'content-area'
-      ) {
-        // 进行标记
-        var start = selection.focusOffset
-        var end = selection.anchorOffset
-        if (start > end) {
-          var tmp = start
-          start = end
-          end = tmp
-        }
-        self.addEntity(self.curMarkLabel, start, end)
-        window.getSelection().removeAllRanges()
-        // 后处理
-        if (!self.continuousMark) {
-          self.curMarkLabel = -1
-        }
-      } else {
-        console.log('itheima')
-        console.log(!selection.isCollapsed)
-      }
+      self.addEntity(self.curMarkLabel)
+      // if (
+      //   !selection.isCollapsed &&
+      //   selection.focusNode.parentElement.className === 'content-area' &&
+      //   selection.anchorNode.parentElement.className === 'content-area'
+      // ) {
+      //   // 进行标记
+      //   var start = selection.focusOffset
+      //   var end = selection.anchorOffset
+      //   if (start > end) {
+      //     var tmp = start
+      //     start = end
+      //     end = tmp
+      //   }
+      //   self.addEntity(self.curMarkLabel, start, end)
+      //   window.getSelection().removeAllRanges()
+      //   // 后处理
+      //   if (!self.continuousMark) {
+      //     self.curMarkLabel = -1
+      //   }
+      // } else {
+      //   console.log('itheima')
+      //   console.log(!selection.isCollapsed)
+      // }
     },
     // 目标单个实体添加模式
     handleSingleAdd1(index) {
-      console.log('target12121212')
       this.judge = 1
       var self = this
-      var selection = window.getSelection()
       this.curMarkLabel = index
       this.continuousMark = false
       this.noShowList[index] = !this.noShowList[index] // Undo Extra Show Action
-      if (
-        !selection.isCollapsed &&
-        selection.focusNode.parentElement.className === 'content-area' &&
-        selection.anchorNode.parentElement.className === 'content-area'
-      ) {
-        // 进行标记
-        var start = selection.focusOffset
-        var end = selection.anchorOffset
-        if (start > end) {
-          var tmp = start
-          start = end
-          end = tmp
-        }
-        self.addEntity1(self.curMarkLabel, start, end)
-        window.getSelection().removeAllRanges()
-        // 后处理
-        if (!self.continuousMark) {
-          self.curMarkLabel = -1
-        }
-      } else {
-        console.log('itheima')
-        console.log(!selection.isCollapsed)
-      }
+      self.addEntity1(self.curMarkLabel)
+      // if (
+      //   !selection.isCollapsed &&
+      //   selection.focusNode.parentElement.className === 'content-area' &&
+      //   selection.anchorNode.parentElement.className === 'content-area'
+      // ) {
+      //   // 进行标记
+      //   var start = selection.focusOffset
+      //   var end = selection.anchorOffset
+      //   if (start > end) {
+      //     var tmp = start
+      //     start = end
+      //     end = tmp
+      //   }
+      //   self.addEntity1(self.curMarkLabel, start, end)
+      //   window.getSelection().removeAllRanges()
+      //   // 后处理
+      //   if (!self.continuousMark) {
+      //     self.curMarkLabel = -1
+      //   }
+      // } else {
+      //   console.log('itheima')
+      //   console.log(!selection.isCollapsed)
+      // }
     },
     // 连续实体添加模式按钮点击处理
     handleContinuousChange(value, index) {
@@ -612,51 +604,55 @@ export default {
         this.curMarkLabel = -1
       }
     },
-    // 高亮悬停实体 实体抽取和关系抽取可以复用
-    handleEntityMouseOver(entity) {
-      var fixPos = document.documentElement.scrollTop
-      document.getElementById('token_' + entity.start).scrollIntoView(false)
-      document.documentElement.scrollTop = fixPos
-      // Add highlight class to entity
-      for (var i = entity.start; i < entity.end; i++) {
-        document.getElementById('token_' + i).className =
-          document.getElementById('token_' + i).className + 'highlight-color'
-      }
-    },
-    // 取消高亮 实体抽取和关系抽取可以复用
-    handleEntityMouseOut(entity) {
-      // Remove highlight class from entity
-      for (var i = entity.start; i < entity.end; i++) {
-        document.getElementById(
-          'token_' + i
-        ).className = document
-          .getElementById('token_' + i)
-          .className.replace('highlight-color', '')
-      }
-    },
+    // // 高亮悬停实体 实体抽取和关系抽取可以复用
+    // handleEntityMouseOver(entity) {
+    //   var fixPos = document.documentElement.scrollTop
+    //   document.getElementById('token_' + entity.start).scrollIntoView(false)
+    //   document.documentElement.scrollTop = fixPos
+    //   // Add highlight class to entity
+    //   for (var i = entity.start; i < entity.end; i++) {
+    //     document.getElementById('token_' + i).className =
+    //       document.getElementById('token_' + i).className + 'highlight-color'
+    //   }
+    // },
+    // // 取消高亮 实体抽取和关系抽取可以复用
+    // handleEntityMouseOut(entity) {
+    //   // Remove highlight class from entity
+    //   for (var i = entity.start; i < entity.end; i++) {
+    //     document.getElementById(
+    //       'token_' + i
+    //     ).className = document
+    //       .getElementById('token_' + i)
+    //       .className.replace('highlight-color', '')
+    //   }
+    // },
     // 起始向lables数组添加实体同时为实体添加背景色 实体抽取和关系抽取 可以部分复用的函数
-    addEntity(labelIndex, start, end) {
+    addEntity(labelIndex) {
       // Add Entity, Add Mark
+      const text = this.selectText
+      console.log(text)
       var node = {
-        start: start,
-        end: end,
-        text: this.targetText.substr(start, end - start)
+        text: text
       }
-      this.labels[labelIndex].entitylist.push(node)
-      this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
-      this.addColor(labelIndex, start, end)
+      if (text !== '') {
+        this.labels[labelIndex].entitylist.push(node)
+        this.selectText = ''
+        this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
+      }
+      
     },
     // 目标向lables数组添加实体同时为实体添加背景色 实体抽取和关系抽取 可以部分复用的函数
     addEntity1(labelIndex, start, end) {
       // Add Entity, Add Mark
+      const text = this.selectText
       var node = {
-        start: start,
-        end: end,
-        text: this.targetText.substr(start, end - start)
+        text: text
       }
-      this.label1[labelIndex].entitylist.push(node)
-      this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
-      this.addColor(labelIndex, start, end)
+      if (text !== '') {
+        this.label1[labelIndex].entitylist.push(node)
+        this.selectText = ''
+        this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
+      }
     },
     // 为实体添加背景色
     addColor(labelIndex, start, end) {
@@ -671,26 +667,26 @@ export default {
     // 从labels中移除实体，去除背景色 不能复用的函数，但是实体抽取和关系抽取可以相互参考
     removeEntity(labelIndex, entityIndex) {
       // Remove Entity, Remove Mark
-      console.log(labelIndex)
-      console.log(entityIndex)
-      console.log(this.labels[labelIndex].entitylist[entityIndex])
-      var start = this.labels[labelIndex].entitylist[entityIndex].start
-      var end = this.labels[labelIndex].entitylist[entityIndex].end
-      for (var i = start; i < end; i++) {
-        var raw = document.getElementById('token_' + i).className
-        var target = 'dot-color-' + this.labels[labelIndex].color + ' '
-        // 移除实体颜色
-        document.getElementById('token_' + i).className = raw.replace(
-          target,
-          ''
-        )
-        // 移除高亮
-        document.getElementById(
-          'token_' + i
-        ).className = document
-          .getElementById('token_' + i)
-          .className.replace('highlight-color', '')
-      }
+      // console.log(labelIndex)
+      // console.log(entityIndex)
+      // console.log(this.labels[labelIndex].entitylist[entityIndex])
+      // var start = this.labels[labelIndex].entitylist[entityIndex].start
+      // var end = this.labels[labelIndex].entitylist[entityIndex].end
+      // for (var i = start; i < end; i++) {
+      //   var raw = document.getElementById('token_' + i).className
+      //   var target = 'dot-color-' + this.labels[labelIndex].color + ' '
+      //   // 移除实体颜色
+      //   document.getElementById('token_' + i).className = raw.replace(
+      //     target,
+      //     ''
+      //   )
+      //   // 移除高亮
+      //   document.getElementById(
+      //     'token_' + i
+      //   ).className = document
+      //     .getElementById('token_' + i)
+      //     .className.replace('highlight-color', '')
+      // }
       // 从labels数组中移除entity
       this.labels[labelIndex].entitylist.splice(entityIndex, 1)
       this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
@@ -715,23 +711,23 @@ export default {
     // 移除实体
     removeEntity1(labelIndex, entityIndex) {
       // Remove Entity, Remove Mark
-      var start = this.label1[labelIndex].entitylist[entityIndex].start
-      var end = this.label1[labelIndex].entitylist[entityIndex].end
-      for (var i = start; i < end; i++) {
-        var raw = document.getElementById('token_' + i).className
-        var target = 'dot-color-' + this.label1[labelIndex].color + ' '
-        // 移除实体颜色
-        document.getElementById('token_' + i).className = raw.replace(
-          target,
-          ''
-        )
-        // 移除高亮
-        document.getElementById(
-          'token_' + i
-        ).className = document
-          .getElementById('token_' + i)
-          .className.replace('highlight-color', '')
-      }
+      // var start = this.label1[labelIndex].entitylist[entityIndex].start
+      // var end = this.label1[labelIndex].entitylist[entityIndex].end
+      // for (var i = start; i < end; i++) {
+      //   var raw = document.getElementById('token_' + i).className
+      //   var target = 'dot-color-' + this.label1[labelIndex].color + ' '
+      //   // 移除实体颜色
+      //   document.getElementById('token_' + i).className = raw.replace(
+      //     target,
+      //     ''
+      //   )
+      //   // 移除高亮
+      //   document.getElementById(
+      //     'token_' + i
+      //   ).className = document
+      //     .getElementById('token_' + i)
+      //     .className.replace('highlight-color', '')
+      // }
       // 从labels数组中移除entity
       this.label1[labelIndex].entitylist.splice(entityIndex, 1)
       this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
@@ -795,6 +791,8 @@ export default {
       this.showCard = true
       this.showDot = false
       this.tableShow = false
+      this.describe = ''
+      this.level = ''
       const length = this.labels[0].entitylist.length
       const length1 = this.label1[0].entitylist.length
       for (let j = length - 1; j >= 0; j--) {
@@ -812,7 +810,8 @@ export default {
     showCard2Disapeer() {
       this.showCard = true
       this.showCard2 = false
-
+      this.describe = ''
+      this.level = ''
       const length = this.labels[0].entitylist.length
       const length1 = this.label1[0].entitylist.length
 
@@ -844,7 +843,7 @@ export default {
     handleClick(tab, event) {
       if (tab.$options.propsData.label === '实体标注') {
         this.$router.push({
-          path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
+          path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfEntity',
           query: {
             id: this.id,
             list: this.$route.query.list,
@@ -884,7 +883,7 @@ export default {
       }
     },
     // 让table显现出来让card消失
-    async checkRelation() {
+    checkRelation() {
       this.tableShow = true
       this.showCard2 = false
       this.showDot = true
@@ -900,14 +899,27 @@ export default {
         this.fileMark.object_marks.push(obj_entity)
       }
       const arr = this.choice.split('-')
+      console.log(this.options)
+      for(let i = 0; i < this.options.length; i++) {
+        const arr2 = this.options[i].label.split('-')
+        const obj_rel = {
+          relaiton_id: '',
+          start_type: arr2[0],
+          relation_type: arr2[1],
+          end_type: arr2[2],
+          relations: [
 
+          ],
+          is_checked: false,
+          is_passed: false,
+          mark_user: '',
+          mark_time: this.time,
+          check_user: '',
+          check_time: ''
+        }
+        this.fileMark.relation_marks.push(obj_rel)
+      }
       const obj = {
-        relaiton_id: '',
-        start_type: arr[0],
-        relation_type: arr[1],
-        end_type: arr[2],
-        relations: [
-          {
             start_object: this.labels[0].entitylist[0].text,
             end_object: this.label1[0].entitylist[0].text,
             advice: this.advice,
@@ -925,23 +937,22 @@ export default {
             check_time: '',
             is_multiple_marked: false
           }
-        ],
-        is_checked: false,
-        is_passed: false,
-        mark_user: '',
-        mark_time: this.time,
-        check_user: '',
-        check_time: ''
+
+      for(let i = 0; i < this.fileMark.relation_marks.length; i++) {
+        if (this.fileMark.relation_marks[i].start_type === arr[0] && this.fileMark.relation_marks[i].relation_type === arr[1] && this.fileMark.relation_marks[i].end_type === arr[2]) {
+          this.fileMark.relation_marks[i].relations.push(obj)
+          break
+        }
       }
-      this.fileMark.relation_marks.push(obj)
+      
       this.isgroup.push(this.group)
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      const time = this.time
-      const document_type = this.document_type
-      await axios.post(url, this.fileMark).then((response) => {
+      let time = this.time
+      let document_type = this.document_type
+     axios.post(url, this.fileMark).then((response) => {
         if (response.data.msg === '添加成功') {
-          const url2 = 'http://localhost:10088/Item/updateTime'
-          const obj = { time: time, name: document_type }
+          let url2 = 'http://localhost:10088/Item/updateTime'
+          let obj = {time: time, name: document_type}
           axios.put(url2, obj).then((response) => {
             console.log(response)
           })
@@ -983,7 +994,7 @@ export default {
       console.log('跳转标记')
       console.log(this.document_type)
       this.$router.push({
-        path: '/xieweihao/Document_information_extraction/Paper/ShowArticle',
+        path: '/xieweihao/Document_information_extraction/Paper/electronicDocument/pdfEntity',
         query: {
           id: this.id,
           list: this.$route.query.list,

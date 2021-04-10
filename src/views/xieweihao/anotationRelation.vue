@@ -771,6 +771,8 @@ export default {
       this.showCard = true
       this.showDot = false
       this.tableShow = false
+      this.describe = ''
+      this.level = ''
       const length = this.labels[0].entitylist.length
       const length1 = this.label1[0].entitylist.length
       for (let j = length - 1; j >= 0; j--) {
@@ -788,6 +790,8 @@ export default {
     showCard2Disapeer() {
       this.showCard = true
       this.showCard2 = false
+      this.level = ''
+      this.describe = ''
 
       const length = this.labels[0].entitylist.length
       const length1 = this.label1[0].entitylist.length
@@ -860,7 +864,7 @@ export default {
       }
     },
     // 让table显现出来让card消失
-    async checkRelation() {
+    checkRelation() {
       this.tableShow = true
       this.showCard2 = false
       this.showDot = true
@@ -876,14 +880,27 @@ export default {
         this.fileMark.object_marks.push(obj_entity)
       }
       const arr = this.choice.split('-')
+      console.log(this.options)
+      for(let i = 0; i < this.options.length; i++) {
+        const arr2 = this.options[i].label.split('-')
+        const obj_rel = {
+          relaiton_id: '',
+          start_type: arr2[0],
+          relation_type: arr2[1],
+          end_type: arr2[2],
+          relations: [
 
+          ],
+          is_checked: false,
+          is_passed: false,
+          mark_user: '',
+          mark_time: this.time,
+          check_user: '',
+          check_time: ''
+        }
+        this.fileMark.relation_marks.push(obj_rel)
+      }
       const obj = {
-        relaiton_id: '',
-        start_type: arr[0],
-        relation_type: arr[1],
-        end_type: arr[2],
-        relations: [
-          {
             start_object: this.labels[0].entitylist[0].text,
             end_object: this.label1[0].entitylist[0].text,
             advice: this.advice,
@@ -901,20 +918,19 @@ export default {
             check_time: '',
             is_multiple_marked: false
           }
-        ],
-        is_checked: false,
-        is_passed: false,
-        mark_user: '',
-        mark_time: this.time,
-        check_user: '',
-        check_time: ''
+
+      for(let i = 0; i < this.fileMark.relation_marks.length; i++) {
+        if (this.fileMark.relation_marks[i].start_type === arr[0] && this.fileMark.relation_marks[i].relation_type === arr[1] && this.fileMark.relation_marks[i].end_type === arr[2]) {
+          this.fileMark.relation_marks[i].relations.push(obj)
+          break
+        }
       }
-      this.fileMark.relation_marks.push(obj)
+      
       this.isgroup.push(this.group)
       const url = 'http://localhost:10088/FileMarks/addFileMark'
       let time = this.time
       let document_type = this.document_type
-     await axios.post(url, this.fileMark).then((response) => {
+     axios.post(url, this.fileMark).then((response) => {
         if (response.data.msg === '添加成功') {
           let url2 = 'http://localhost:10088/Item/updateTime'
           let obj = {time: time, name: document_type}

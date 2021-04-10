@@ -234,6 +234,7 @@ export default {
     },
     // 和搜索相关的代码
     querySearchAsync(queryString, cb) {
+      console.log(this.list)
       var search_data = this.list
       console.log(queryString)
       if (queryString === '') {

@@ -212,7 +212,7 @@ export default {
 
   },
   mounted() {
-    this.getData()
+    //this.getData()
     this.getRelationChoice()
     this.switchPoint()
     this.$nextTick(() => {
@@ -640,7 +640,7 @@ export default {
       this.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
     },
     // 添加标注
-    async addFileMark() {
+    addFileMark() {
       this.fileMark.document_id = this.id
       this.fileMark.document_type = this.$route.query.document_type
       this.fileMark.object_marks = []
@@ -694,7 +694,7 @@ export default {
       const url = 'http://localhost:10088/FileMarks/addFileMark'
       const time = this.time
       const document_type = this.document_type
-      await axios.post(url, this.fileMark).then((response) => {
+      axios.post(url, this.fileMark).then((response) => {
         console.log(response)
         console.log(response.data.msg)
         if (response.data.msg === '添加成功') {
