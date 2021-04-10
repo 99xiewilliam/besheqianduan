@@ -881,7 +881,7 @@ export default {
       }
       const arr = this.choice.split('-')
       console.log(this.options)
-      for(let i = 0; i < this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         const arr2 = this.options[i].label.split('-')
         const obj_rel = {
           relaiton_id: '',
@@ -901,39 +901,39 @@ export default {
         this.fileMark.relation_marks.push(obj_rel)
       }
       const obj = {
-            start_object: this.labels[0].entitylist[0].text,
-            end_object: this.label1[0].entitylist[0].text,
-            advice: this.advice,
-            evi_level: this.level,
-            evi_describe: this.describe,
-            reference: '',
-            group: this.group,
-            time: this.time,
-            type: this.choice,
-            is_checked: false,
-            is_passed: false,
-            mark_user_id: '',
-            mark_time: this.time,
-            check_user_id: '',
-            check_time: '',
-            is_multiple_marked: false
-          }
+        start_object: this.labels[0].entitylist[0].text,
+        end_object: this.label1[0].entitylist[0].text,
+        advice: this.advice,
+        evi_level: this.level,
+        evi_describe: this.describe,
+        reference: '',
+        group: this.group,
+        time: this.time,
+        type: this.choice,
+        is_checked: false,
+        is_passed: false,
+        mark_user_id: '',
+        mark_time: this.time,
+        check_user_id: '',
+        check_time: '',
+        is_multiple_marked: false
+      }
 
-      for(let i = 0; i < this.fileMark.relation_marks.length; i++) {
+      for (let i = 0; i < this.fileMark.relation_marks.length; i++) {
         if (this.fileMark.relation_marks[i].start_type === arr[0] && this.fileMark.relation_marks[i].relation_type === arr[1] && this.fileMark.relation_marks[i].end_type === arr[2]) {
           this.fileMark.relation_marks[i].relations.push(obj)
           break
         }
       }
-      
+
       this.isgroup.push(this.group)
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      let time = this.time
-      let document_type = this.document_type
-     axios.post(url, this.fileMark).then((response) => {
+      const time = this.time
+      const document_type = this.document_type
+      axios.post(url, this.fileMark).then((response) => {
         if (response.data.msg === '添加成功') {
-          let url2 = 'http://localhost:10088/Item/updateTime'
-          let obj = {time: time, name: document_type}
+          const url2 = 'http://localhost:10088/Item/updateTime'
+          const obj = { time: time, name: document_type }
           axios.put(url2, obj).then((response) => {
             console.log(response)
           })

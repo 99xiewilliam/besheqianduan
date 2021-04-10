@@ -16,8 +16,7 @@
       <template slot="paneL">
         <el-card class="box-card">
           <div class="content-container">
-            <iframe :src="frame_url" width="100%" height="100%" frameborder="0" id="myIframe">
-            </iframe>
+            <iframe id="myIframe" :src="frame_url" width="100%" height="100%" frameborder="0" />
           </div>
         </el-card>
       </template>
@@ -86,7 +85,6 @@
                     >
                       <div
                         class="test-entity-block"
-                        
                       >
                         <span class="test-entity-text">{{
                           entity.text
@@ -212,7 +210,7 @@ export default {
 
   },
   mounted() {
-    //this.getData()
+    // this.getData()
     this.getRelationChoice()
     this.switchPoint()
     this.$nextTick(() => {
@@ -225,22 +223,22 @@ export default {
   },
   methods: {
     switchPoint() {
-      let vm = this
-      let iframe = document.getElementById("myIframe")
+      const vm = this
+      const iframe = document.getElementById('myIframe')
       let x1 = ''
       let x2 = ''
       let y1 = ''
       let y2 = ''
-      iframe.onload = function () {
-        iframe.contentDocument.addEventListener('mousedown', function (e) {
+      iframe.onload = function() {
+        iframe.contentDocument.addEventListener('mousedown', function(e) {
           x1 = e.pageX
           y1 = e.pageY
         }, true)
 
-        iframe.contentDocument.addEventListener('mouseup', function (e) {
+        iframe.contentDocument.addEventListener('mouseup', function(e) {
           x2 = e.pageX
           y2 = e.pageY
-          if (x1 === x2 && y1 === y2) return;
+          if (x1 === x2 && y1 === y2) return
           var choose = iframe.contentWindow.getSelection().toString()
           vm.selectText = choose
           console.log('selected words')
@@ -249,13 +247,13 @@ export default {
       }
     },
     sendMessage() {
-      let vm = this
-      let iframe = document.getElementById('myIframe')
-      iframe.contentWindow.postMessage(vm.selectText, "*")
+      const vm = this
+      const iframe = document.getElementById('myIframe')
+      iframe.contentWindow.postMessage(vm.selectText, '*')
     },
     getMessage() {
-      let iframe = document.getElementById('myIframe')
-      iframe.contentWindow.addEventListener('message', function (e) {
+      const iframe = document.getElementById('myIframe')
+      iframe.contentWindow.addEventListener('message', function(e) {
         console.log(e.data)
         iframe.contentWindow.PDFViewerApplication.findBar.findField.value = e.data
         iframe.contentWindow.PDFViewerApplication.findBar.highlightAll.checked = true
@@ -393,7 +391,7 @@ export default {
     // 单个实体添加模式
     handleSingleAdd(index) {
       var self = this
-      //var selection = window.getSelection()
+      // var selection = window.getSelection()
       this.curMarkLabel = index
       this.continuousMark = false
       this.noShowList[index] = !this.noShowList[index] // Undo Extra Show Action
@@ -479,8 +477,8 @@ export default {
         this.selectText = ''
         this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
       }
-      
-      //this.addColor(labelIndex, start, end)
+
+      // this.addColor(labelIndex, start, end)
     },
     // 为实体添加背景色
     addColor(labelIndex, start, end) {
@@ -750,7 +748,7 @@ export default {
       console.log('handleSkip')
       console.log(this.list)
       let judge = 0
-      
+
       for (let i = 0; i < this.list.length; i++) {
         if (judge === 1) {
           this.pdf_obj.id = this.list[i].id.slice(19, this.list[i].id.length - 1)

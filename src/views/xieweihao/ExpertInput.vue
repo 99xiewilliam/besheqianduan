@@ -341,7 +341,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    //this.getList()
     this.getReference()
     this.getData()
     this.getRelationData()

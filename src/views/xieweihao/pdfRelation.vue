@@ -12,13 +12,11 @@
       </el-tabs>
     </aside>
 
-   
     <split-pane split="vertical" @resize="resize">
       <template slot="paneL">
         <el-card class="box-card">
           <div class="content-container">
-            <iframe :src="frame_url" width="100%" height="100%" frameborder="0" id="myIframe">
-            </iframe>
+            <iframe id="myIframe" :src="frame_url" width="100%" height="100%" frameborder="0" />
           </div>
         </el-card>
       </template>
@@ -29,7 +27,7 @@
               <h2>添加关系</h2>
               <hr>
             </el-header>
-            
+
             <el-main>
               <i
                 v-show="showDot"
@@ -113,7 +111,6 @@
                                 >
                                   <div
                                     class="test-entity-block"
-                            
                                   >
                                     <span class="test-entity-text">{{
                                       entity.text
@@ -166,7 +163,6 @@
                                 >
                                   <div
                                     class="test-entity-block"
-                                    
                                   >
                                     <span class="test-entity-text">{{
                                       entity.text
@@ -361,7 +357,7 @@ export default {
     // this.getData()
     this.switchPoint()
     this.$nextTick(() => {
-      //this.getAnnotate()
+      // this.getAnnotate()
     })
   },
   created() {
@@ -419,22 +415,22 @@ export default {
       })
     },
     switchPoint() {
-      let vm = this
-      let iframe = document.getElementById("myIframe")
+      const vm = this
+      const iframe = document.getElementById('myIframe')
       let x1 = ''
       let x2 = ''
       let y1 = ''
       let y2 = ''
-      iframe.onload = function () {
-        iframe.contentDocument.addEventListener('mousedown', function (e) {
+      iframe.onload = function() {
+        iframe.contentDocument.addEventListener('mousedown', function(e) {
           x1 = e.pageX
           y1 = e.pageY
         }, true)
 
-        iframe.contentDocument.addEventListener('mouseup', function (e) {
+        iframe.contentDocument.addEventListener('mouseup', function(e) {
           x2 = e.pageX
           y2 = e.pageY
-          if (x1 === x2 && y1 === y2) return;
+          if (x1 === x2 && y1 === y2) return
           var choose = iframe.contentWindow.getSelection().toString()
           vm.selectText = choose
           console.log('selected words')
@@ -443,13 +439,13 @@ export default {
       }
     },
     sendMessage() {
-      let vm = this
-      let iframe = document.getElementById('myIframe')
-      iframe.contentWindow.postMessage(vm.selectText, "*")
+      const vm = this
+      const iframe = document.getElementById('myIframe')
+      iframe.contentWindow.postMessage(vm.selectText, '*')
     },
     getMessage() {
-      let iframe = document.getElementById('myIframe')
-      iframe.contentWindow.addEventListener('message', function (e) {
+      const iframe = document.getElementById('myIframe')
+      iframe.contentWindow.addEventListener('message', function(e) {
         console.log(e.data)
         iframe.contentWindow.PDFViewerApplication.findBar.findField.value = e.data
         iframe.contentWindow.PDFViewerApplication.findBar.highlightAll.checked = true
@@ -522,7 +518,7 @@ export default {
     handleSingleAdd(index) {
       this.judge = 0
       var self = this
-      //var selection = window.getSelection()
+      // var selection = window.getSelection()
       this.curMarkLabel = index
       this.continuousMark = false
       this.noShowList[index] = !this.noShowList[index] // Undo Extra Show Action
@@ -639,7 +635,6 @@ export default {
         this.selectText = ''
         this.$forceUpdate() // 嵌套数组更新没有监听到，强制更新数据
       }
-      
     },
     // 目标向lables数组添加实体同时为实体添加背景色 实体抽取和关系抽取 可以部分复用的函数
     addEntity1(labelIndex, start, end) {
@@ -900,7 +895,7 @@ export default {
       }
       const arr = this.choice.split('-')
       console.log(this.options)
-      for(let i = 0; i < this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         const arr2 = this.options[i].label.split('-')
         const obj_rel = {
           relaiton_id: '',
@@ -920,39 +915,39 @@ export default {
         this.fileMark.relation_marks.push(obj_rel)
       }
       const obj = {
-            start_object: this.labels[0].entitylist[0].text,
-            end_object: this.label1[0].entitylist[0].text,
-            advice: this.advice,
-            evi_level: this.level,
-            evi_describe: this.describe,
-            reference: '',
-            group: this.group,
-            time: this.time,
-            type: this.choice,
-            is_checked: false,
-            is_passed: false,
-            mark_user_id: '',
-            mark_time: this.time,
-            check_user_id: '',
-            check_time: '',
-            is_multiple_marked: false
-          }
+        start_object: this.labels[0].entitylist[0].text,
+        end_object: this.label1[0].entitylist[0].text,
+        advice: this.advice,
+        evi_level: this.level,
+        evi_describe: this.describe,
+        reference: '',
+        group: this.group,
+        time: this.time,
+        type: this.choice,
+        is_checked: false,
+        is_passed: false,
+        mark_user_id: '',
+        mark_time: this.time,
+        check_user_id: '',
+        check_time: '',
+        is_multiple_marked: false
+      }
 
-      for(let i = 0; i < this.fileMark.relation_marks.length; i++) {
+      for (let i = 0; i < this.fileMark.relation_marks.length; i++) {
         if (this.fileMark.relation_marks[i].start_type === arr[0] && this.fileMark.relation_marks[i].relation_type === arr[1] && this.fileMark.relation_marks[i].end_type === arr[2]) {
           this.fileMark.relation_marks[i].relations.push(obj)
           break
         }
       }
-      
+
       this.isgroup.push(this.group)
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      let time = this.time
-      let document_type = this.document_type
-     axios.post(url, this.fileMark).then((response) => {
+      const time = this.time
+      const document_type = this.document_type
+      axios.post(url, this.fileMark).then((response) => {
         if (response.data.msg === '添加成功') {
-          let url2 = 'http://localhost:10088/Item/updateTime'
-          let obj = {time: time, name: document_type}
+          const url2 = 'http://localhost:10088/Item/updateTime'
+          const obj = { time: time, name: document_type }
           axios.put(url2, obj).then((response) => {
             console.log(response)
           })
