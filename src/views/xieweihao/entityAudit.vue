@@ -340,7 +340,7 @@ export default {
     },
     // 搜索相关代码
     handleSelect(item) {
-      console.log(item)
+      console.log(this.results)
       this.tableData = this.results
       // this.nowTable;
     },

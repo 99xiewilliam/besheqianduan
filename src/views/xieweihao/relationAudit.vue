@@ -2,12 +2,12 @@
   <div class="app-container">
     <el-container>
       <el-header>
-        手动添加图谱数据库
+        审查关系标注数据
       </el-header>
       <el-container id="button_bg">
         <el-main id="button">
-          <el-button @click="handleClick()">实体数据管理</el-button>
-          <el-button>关系数据管理</el-button>
+          <el-button @click="handleClick()">实体数据审核</el-button>
+          <el-button>关系数据审核</el-button>
         </el-main>
       </el-container>
       <el-container class="mydiv1">
@@ -446,7 +446,7 @@ export default {
     },
     handleClick() {
       this.$router.push({
-        path: '/xieweihao/Expert_input',
+        path: '/xieweihao/entityAudit',
         query: {
         }
       })

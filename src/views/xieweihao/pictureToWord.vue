@@ -91,7 +91,15 @@
               placeholder="请输入内容"
               @select="handleSelect1"
             /> -->
-            <el-button class="right" @click="handleSkip">不合格</el-button>
+            <!-- <el-button class="right" @click="handleSkip">不合格</el-button> -->
+            <el-select v-model="value" placeholder="请选择" @change="handleChange($event)">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
             <el-button
               type="primary"
 
@@ -224,6 +232,20 @@ export default {
       state: '',
       results: [],
       time: '',
+      value: '',
+      options: [
+        {
+          value: 'English',
+          label: 'English'
+        },
+        {
+          value: 'Chinese',
+          label: 'Chinese'
+        }
+      ],
+      Ocr: {
+          language: ''
+      },
       fileMark: {
         document_id: '',
         document_type: this.$route.query.document_type,
@@ -324,6 +346,14 @@ export default {
     handleSuccess(res, file) {
       console.log(res)
       this.targetText = res
+    },
+    handleChange(e) {
+      this.Ocr.language = e
+      console.log(this.Ocr)
+      const url = 'http://localhost:10088/Upload/setLanguage'
+      axios.post(url, this.Ocr).then((response) => {
+        console.log(response)
+      })
     },
     addOcrData() {
       this.saveData.content = this.targetText
@@ -773,7 +803,9 @@ export default {
     saveInfo() {
 
     },
-    handleSkip() {},
+    handleSkip() {
+
+    },
     handleSubmit() {}
   }
 }
