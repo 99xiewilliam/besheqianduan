@@ -631,16 +631,17 @@ export default {
       }
 
       const url = 'http://localhost:10088/FileMarks/addFileMark'
-      const time = this.time
-      const document_type = this.document_type
+      let time = this.time
+      let document_type = this.document_type
       axios.post(url, this.fileMark).then((response) => {
         console.log(response)
         console.log(response.data.msg)
         if (response.data.msg === '添加成功') {
-          const url2 = 'http://localhost:10088/Item/updateTime'
-          const obj = { time: time, name: document_type }
+          let url2 = 'http://localhost:10088/Item/updateTime'
+          let obj = {time: time, name: document_type}
           axios.put(url2, obj).then((response) => {
             console.log(response)
+            this.modifyStatus()
           })
           this.$message({
             message: '恭喜你，添加成功',
@@ -651,6 +652,8 @@ export default {
         console.log(error)
       })
 
+    },
+    modifyStatus () {
       const url1 = 'http://localhost:10088/reference/modify'
       axios.put(url1, {
         id: this.id

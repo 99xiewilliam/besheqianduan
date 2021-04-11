@@ -379,10 +379,23 @@ export const asyncRoutes = [
         meta: { title: '专家录入', icon: 'theme' }
       },
       {
+        path: 'entityAudit',
+        component: () => import('@/views/xieweihao/entityAudit'),
+        name: 'entityAudit',
+        meta: { title: '实体审核', icon: 'theme' }
+      },
+      {
         path: '/xieweihao/ExpertInput/RelationDataProcess',
         component: () => import('@/views/xieweihao/RelationDataProcess'),
         name: 'RelationDataProcess',
         meta: { title: '关系数据', icon: 'theme' },
+        hidden: true
+      },
+      {
+        path: '/xieweihao/entityAudit/relationAudit',
+        component: () => import('@/views/xieweihao/relationAudit'),
+        name: 'relationAudit',
+        meta: { title: '关系审核', icon: 'theme' },
         hidden: true
       },
       {
