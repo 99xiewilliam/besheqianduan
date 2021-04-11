@@ -2,12 +2,12 @@
   <div class="app-container">
     <el-container>
       <el-header>
-        手动添加图谱数据库
+        实体数据审核
       </el-header>
       <el-container id="button_bg">
         <el-main id="button">
-          <el-button>实体数据管理</el-button>
-          <el-button @click="handleClick()">关系数据管理</el-button>
+          <el-button>实体数据审核</el-button>
+          <el-button @click="handleClick()">关系数据审核</el-button>
         </el-main>
       </el-container>
       <el-container class="mydiv1">
@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
 
-        <el-table-column align="center" label="关系操作" min-width="180">
+        <el-table-column align="center" label="审核" min-width="180">
           <template slot-scope="{row}">
             <el-button @click="js_method1(row)">合格</el-button>
             <el-button @click="js_method()">不合格</el-button>

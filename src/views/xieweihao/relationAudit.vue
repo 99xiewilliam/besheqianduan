@@ -23,13 +23,11 @@
           </el-select>
         </el-container>
         <el-container class="mydiv2">
-          <el-button type="primary" class="inRight" @click="addOneEntity()">单条添加</el-button>
-          <el-button type="info" class="inRight">下载模板</el-button>
-          <el-button type="info" class="inRight">导出数据</el-button>
-          <el-button type="success" class="inRight">批量上传</el-button>
+          <el-button type="info" class="inRight">表格审核</el-button>
+          <el-button type="success" class="inRight">图像显示</el-button>
         </el-container>
       </el-container>
-      <el-dialog title="修改关系" :visible.sync="dialogFormVisible">
+      <!-- <el-dialog title="修改关系" :visible.sync="dialogFormVisible">
         <el-form :model="form">
           <el-form-item label="" :label-width="formLabelWidth">
             <el-select v-model="value_option1" placeholder="请选择活动区域" @change="handleChange($event)">
@@ -147,7 +145,7 @@
           </div>
         </div>
 
-      </el-drawer>
+      </el-drawer> -->
       <div class="margin">
         <el-autocomplete
           v-model="state"
@@ -155,11 +153,8 @@
           placeholder="请输入内容"
           @select="handleSelect"
         />
-        <el-button style="margin-bottom:20px;margin-left:20px;" type="primary">
-          搜索
-        </el-button>
       </div>
-      <el-table ref="dragTable" v-loading="listLoading" :data="nowTable" :row-key="getRowKey" border fit highlight-current-row style="width: 100%">
+      <el-table v-loading="listLoading" :data="nowTable" :row-key="getRowKey" border fit highlight-current-row style="width: 100%">
         <el-table-column align="center" label="序号" width="65">
           <template slot-scope="{row}">
             <span>{{ row.id }}</span>
@@ -194,8 +189,20 @@
             <span>{{ row.end_object }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="180">
-          <a style="text-decoration:underline; color: blue;" @click="js_method()">编辑</a>
+        <el-table-column class-name="status-col" label="审核情况" width="110">
+          <template slot-scope="{ row }">
+            <el-tag :type="row.is_passed | statusFilter">
+              <span v-if="row.is_passed == true">通过</span>
+              <span v-else>不通过</span>
+            </el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="审核" min-width="180">
+          <template slot-scope="{row}">
+            <el-button @click="js_method1(row)">合格</el-button>
+            <el-button @click="js_method()">不合格</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -298,7 +305,7 @@ export default {
       this.oldList = this.list.map(v => v.id)
       this.newList = this.oldList.slice()
       this.$nextTick(() => {
-        this.setSort()
+        //this.setSort()
       })
     },
     // 获取标注数据
@@ -322,7 +329,7 @@ export default {
                 const item = { document_id: document_id, document_type: document_type, id: count,
                   start_type: start_type, relation_type: relation_type, end_type: end_type,
                   start_object: g.start_object, end_object: g.end_object, advice: g.advice,
-                  evi_level: g.evi_level, evi_describe: g.evi_describe, group: g.group }
+                  evi_level: g.evi_level, evi_describe: g.evi_describe, group: g.group, is_checked: g.is_checked, is_passed: g.is_passed}
 
                 this.list.push(item)
                 this.list1.push(item)
@@ -333,7 +340,7 @@ export default {
           this.oldList = this.list.map(v => v.id)
           this.newList = this.oldList.slice()
           this.$nextTick(() => {
-            this.setSort()
+            //this.setSort()
           })
         })
     },

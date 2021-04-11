@@ -994,12 +994,12 @@ export default {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
 }
-.test-button {
+/* .test-button {
   float: right;
   display: inline-block;
   vertical-align: center;
   vertical-align: middle;
-}
+} */
 
 .entity-block-area {
   padding: 10px;
