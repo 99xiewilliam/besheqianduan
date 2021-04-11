@@ -200,8 +200,8 @@
 
         <el-table-column align="center" label="审核" min-width="180">
           <template slot-scope="{row}">
-            <el-button @click="js_method1(row)">合格</el-button>
-            <el-button @click="js_method()">不合格</el-button>
+            <el-button @click="changeStatus(row, 1)">合格</el-button>
+            <el-button @click="changeStatus(row, 0)">不合格</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -485,6 +485,30 @@ export default {
       }
       this.time = new Date().Format('yyyy-MM-dd hh:mm:ss')
       console.log(this.time)
+    },
+    changeStatus(obj, judge) {
+      let relation = {}
+      relation.document_id = obj.document_id
+      relation.start_type = obj.start_type
+      relation.relation_type = obj.relation_type
+      relation.end_type = obj.end_type
+      relation.start_object = obj.start_object
+      relation.end_object = obj.end_object
+      if (judge === 1) {
+        relation.status = true
+      }else {
+        relation.status = false
+      }
+      const url = 'http://localhost:10088/FileMarks/updateRelationStatus'
+      axios.put(url, relation).then((response) => {
+        console.log(response)
+        this.list = []
+        this.getReference()
+        this.nowTable
+        //this.getReference()
+        //window.reload()
+        //this.$router.go(0)
+      })
     },
     setSort() {
       const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]

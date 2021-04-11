@@ -51,18 +51,18 @@
         </el-table-column>
 
         <el-table-column class-name="status-col" label="审核情况" width="110">
-        <template slot-scope="{ row }">
-          <el-tag :type="row.is_passed | statusFilter">
-            <span v-if="row.is_passed == true">通过</span>
-            <span v-else>不通过</span>
-          </el-tag>
-        </template>
-      </el-table-column>
+          <template slot-scope="{ row }">
+            <el-tag :type="row.is_passed | statusFilter">
+              <span v-if="row.is_passed == true">通过</span>
+              <span v-else>不通过</span>
+            </el-tag>
+          </template>
+        </el-table-column>
 
         <el-table-column align="center" label="审核" min-width="180">
           <template slot-scope="{row}">
-            <el-button @click="js_method1(row)">合格</el-button>
-            <el-button @click="js_method()">不合格</el-button>
+            <el-button @click="changeStatus(row, 1)">合格</el-button>
+            <el-button @click="changeStatus(row, 0)">不合格</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,7 +72,7 @@
         :total="list.length"
         :page-size="pagesize"
         :current-page="currentPage"
-        :page-sizes="[1, 2, 5, 10]"
+        :page-sizes="[5, 10, 15, 20]"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -128,7 +128,7 @@ export default {
       formLabelWidth: '120px',
       drawer: false,
       direction: 'rtl',
-      pagesize: 1,
+      pagesize: 5,
       currentPage: 1,
       relation_value: '',
       relation_options: [],
@@ -214,7 +214,7 @@ export default {
               f.objects.forEach((g) => {
                 const item = { document_id: document_id, document_type: document_type,
                   object_type: object_type, description: '', iCD_11: '', type: '', name: '', time: '' , is_checked: '', is_passed: ''}
-                const obj = {}
+                //const obj = {}
                 item.name = g.name
                 item.iCD_11 = g.iCD_11
                 item.description = g.description
@@ -468,6 +468,27 @@ export default {
           state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         )
       }
+    },
+    changeStatus(obj, judge) {
+      let entity = {}
+      entity.document_id = obj.document_id
+      entity.object_type = obj.object_type
+      entity.name = obj.name
+      if (judge === 1) {
+        entity.status = true
+      }else {
+        entity.status = false
+      }
+      const url = 'http://localhost:10088/FileMarks/updateEntityStatus'
+      axios.put(url, entity).then((response) => {
+        console.log(response)
+        this.list = []
+        this.getReference()
+        this.nowTable
+        //this.getReference()
+        //window.reload()
+        //this.$router.go(0)
+      })
     },
     // 让内部抽屉显示
     getInnerDrawer() {
