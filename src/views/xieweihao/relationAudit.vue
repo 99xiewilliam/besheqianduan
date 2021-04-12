@@ -23,8 +23,8 @@
           </el-select>
         </el-container>
         <el-container class="mydiv2">
-          <el-button type="info" class="inRight">表格审核</el-button>
-          <el-button type="success" class="inRight">图像显示</el-button>
+          <el-button type="info" class="inRight" @click="getTable()">表格审核</el-button>
+          <el-button type="success" class="inRight" @click="getChart()">图像显示</el-button>
         </el-container>
       </el-container>
       <!-- <el-dialog title="修改关系" :visible.sync="dialogFormVisible">
@@ -154,7 +154,14 @@
           @select="handleSelect"
         />
       </div>
-      <el-table v-loading="listLoading" :data="nowTable" :row-key="getRowKey" border fit highlight-current-row style="width: 100%">
+      <div class="divMain" id="main" v-show="showChart">
+        <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+          <div id="main" class="width: 100%; height: 100%">
+
+          </div>
+        </el-row> -->
+      </div>
+      <el-table v-loading="listLoading" :data="nowTable" :row-key="getRowKey" border fit highlight-current-row style="width: 100%" v-show="showTable">
         <el-table-column align="center" label="序号" width="65">
           <template slot-scope="{row}">
             <span>{{ row.id }}</span>
@@ -223,6 +230,7 @@
 import { fetchList } from '@/api/article'
 import Sortable from 'sortablejs'
 import axios from 'axios'
+import * as echarts from 'echarts';
 
 export default {
   name: 'DragTable',
@@ -238,6 +246,8 @@ export default {
   },
   data() {
     return {
+      showTable: true,
+      showChart: false,
       count: 1,
       list: [],
       list1: [],
@@ -307,6 +317,85 @@ export default {
       this.$nextTick(() => {
         //this.setSort()
       })
+    },
+    getChart() {
+      this.showTable = false
+      this.showChart = true
+
+      let chartDom = document.getElementById('main')
+      let myChart = echarts.init(chartDom, 'dark')
+      let option
+      //myChart.showLoading();
+      let data = []
+      let category = []
+      
+      for (let i = 0; i < this.options2.length; i++) {
+        data.push(this.options2[i].label)
+        let obj_cate = {}
+        obj_cate.keyword = {}
+        obj_cate.name = this.options2[i].label
+        category.push(obj_cate)
+      }
+      let nodes = []
+      for(let i = 0; i < this.list.length; i++) {
+        let obj_node = {}
+        obj_node.name = this.list[i].start_object
+        obj_node.value = 10
+        let type = this.list[i].start_type + '-' + this.list[i].relation_type + '-' + this.list[i].end_type
+        obj_node.category = this.getIndex(type, data)
+        nodes.push(obj_node)
+        let obj_node1 = {}
+        obj_node1.name = this.list[i].end_object
+        obj_node1.value = 10
+        obj_node1.category = this.getIndex(type, data)
+        nodes.push(obj_node1)
+      }
+      let links = []
+      for(let i = 0; i + 1 < nodes.length; i = i + 2) {
+        let obj_link = {}
+        obj_link.source = i
+        obj_link.target = i + 1
+        links.push(obj_link)
+      }
+      option = {
+          legend: {
+              data: data
+          },
+          series: [{
+              type: 'graph',
+              layout: 'force',
+              animation: false,
+              label: {
+                  position: 'right',
+                  formatter: '{b}'
+              },
+              draggable: true,
+              data: nodes.map(function (node, idx) {
+                  node.id = idx;
+                  return node;
+              }),
+              categories: category,
+              force: {
+                  edgeLength: 5,
+                  repulsion: 20,
+                  gravity: 0.2
+              },
+              edges: links
+          }]
+      };
+
+      myChart.setOption(option);
+    },
+    getIndex(type, category) {
+      for (let i = 0; i < category.length; i++) {
+        if (type === category[i]) {
+          return i
+        }
+      }
+    }, 
+    getTable() {
+      this.showChart = false
+      this.showTable = true
     },
     // 获取标注数据
     getReference() {
@@ -591,4 +680,10 @@ export default {
   margin-top: 10px;
 }
 
+.divMain {
+  width: 1850px;
+  line-height: 40px;
+  height: 800px;
+  position: relative;
+}
 </style>

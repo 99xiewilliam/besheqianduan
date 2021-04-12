@@ -18,8 +18,8 @@
           </el-select>
         </el-container>
         <el-container class="mydiv2">
-          <el-button type="info" class="inRight">表格审核</el-button>
-          <el-button type="success" class="inRight">图像显示</el-button>
+          <el-button type="info" class="inRight" @click="getTable()">表格审核</el-button>
+          <el-button type="success" class="inRight" @click="getChart()">图像显示</el-button>
         </el-container>
       </el-container>
       
@@ -31,7 +31,14 @@
           @select="handleSelect1"
         />
       </div>
-      <el-table v-loading="listLoading" :data="nowTable" :row-key="getRowKey" border fit highlight-current-row style="width: 100%">
+      <div class="divMain" id="main" v-show="showChart">
+        <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+          <div id="main" class="width: 100%; height: 100%">
+
+          </div>
+        </el-row> -->
+      </div>
+      <el-table v-loading="listLoading" :data="nowTable" :row-key="getRowKey" border fit highlight-current-row style="width: 100%" v-show="showTable">
         <el-table-column align="center" label="实例ID" width="200px">
           <template slot-scope="{row}">
             <span>{{ row.document_id }}</span>
@@ -84,6 +91,7 @@
 import { fetchList } from '@/api/article'
 import Sortable from 'sortablejs'
 import axios from 'axios'
+import * as echarts from 'echarts';
 
 export default {
   name: 'DragTable',
@@ -104,6 +112,8 @@ export default {
       list1: [],
       total: '',
       listLoading: true,
+      showTable: true,
+      showChart: false,
       listQuery: {
         page: 1,
         limit: 10
@@ -174,12 +184,16 @@ export default {
       )
     }
   },
+  mounted() {
+    // this.getChart()
+  },
   created() {
     //this.getList()
     this.getReference()
     this.getData()
     this.getRelationData()
     this.getEntityData()
+    
   },
   methods: {
     async getList() {
@@ -195,6 +209,83 @@ export default {
       this.$nextTick(() => {
         //this.setSort()
       })
+    },
+    getChart() {
+      this.showTable = false
+      this.showChart = true
+
+      let chartDom = document.getElementById('main')
+      let myChart = echarts.init(chartDom, 'dark')
+      let option
+      //myChart.showLoading();
+      let data = []
+      let category = []
+      
+      for (let i = 0; i < this.options.length; i++) {
+        data.push(this.options[i].label)
+        let obj_cate = {}
+        obj_cate.keyword = {}
+        obj_cate.name = this.options[i].label
+        category.push(obj_cate)
+      }
+      let nodes = []
+      for(let i = 0; i < this.list.length; i++) {
+        let obj_node = {}
+        obj_node.name = this.list[i].name
+        obj_node.value = 10
+        obj_node.category = this.getIndex(this.list[i].object_type, data)
+        nodes.push(obj_node)
+      }
+      let links = []
+      for(let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          if (nodes[i].category === nodes[j].category) {
+            let obj_link = {}
+            obj_link.source = i
+            obj_link.target = j
+            links.push(obj_link)
+          }
+        }
+      }
+      option = {
+          legend: {
+              data: data
+          },
+          series: [{
+              type: 'graph',
+              layout: 'force',
+              animation: false,
+              label: {
+                  position: 'right',
+                  formatter: '{b}'
+              },
+              draggable: true,
+              data: nodes.map(function (node, idx) {
+                  node.id = idx;
+                  return node;
+              }),
+              categories: category,
+              force: {
+                  edgeLength: 5,
+                  repulsion: 20,
+                  gravity: 0.2
+              },
+              edges: links
+          }]
+      };
+
+      myChart.setOption(option);
+    },
+    getIndex(type, category) {
+      for (let i = 0; i < category.length; i++) {
+        if (type === category[i]) {
+          return i
+        }
+      }
+    }, 
+    getTable() {
+      this.showChart = false
+      this.showTable = true
     },
     // 获取实体标注数据
     getReference() {
@@ -763,6 +854,19 @@ export default {
 
 .margin {
   margin-top: 10px;
+}
+
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
+}
+
+.divMain {
+  width: 1850px;
+  line-height: 40px;
+  height: 800px;
+  position: relative;
 }
 
 </style>
