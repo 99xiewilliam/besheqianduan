@@ -428,7 +428,7 @@ export default {
   methods: {
     // 获取后台文章摘要
     async getData() {
-      const url = 'http://localhost:10088/reference/getOnePaper'
+      const url = 'http://localhost:10088/reference/getOne' + this.$route.query.document_type
       await axios.post(url, this.id).then((response) => {
         console.log(response)
         this.summary = response.data.summary
@@ -948,7 +948,8 @@ export default {
 
       const url1 = 'http://localhost:10088/reference/modify'
       axios.put(url1, {
-        id: this.id
+        id: this.id,
+        category: this.$route.query.document_type
       }).then((response) => {
         console.log(response)
       })

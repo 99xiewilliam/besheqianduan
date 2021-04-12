@@ -231,7 +231,7 @@ export default {
     switchToPage(coll_name) {
       console.log(coll_name)
       this.$router.push({
-        path: '/xieweihao/Document_information_extraction/' + coll_name,
+        path: '/xieweihao/Document_information_extraction/Paper',
         query: {
           name: coll_name
         }

@@ -364,7 +364,8 @@ export default {
           series: [{
               type: 'graph',
               layout: 'force',
-              animation: false,
+              animation: true,
+              roam: true,
               label: {
                   position: 'right',
                   formatter: '{b}'
@@ -377,8 +378,8 @@ export default {
               categories: category,
               force: {
                   edgeLength: 5,
-                  repulsion: 20,
-                  gravity: 0.2
+                  repulsion: 100,
+                  //gravity: 0.2
               },
               edges: links
           }]

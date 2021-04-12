@@ -45,67 +45,59 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
-      this.chart.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        radar: {
-          radius: '66%',
-          center: ['50%', '42%'],
-          splitNumber: 8,
-          splitArea: {
-            areaStyle: {
-              color: 'rgba(127,95,132,.3)',
-              opacity: 1,
-              shadowBlur: 45,
-              shadowColor: 'rgba(0,0,0,.5)',
-              shadowOffsetX: 0,
-              shadowOffsetY: 15
-            }
+      let option = {
+          tooltip: {
+              trigger: 'axis',
+              axisPointer: {            // Use axis to trigger tooltip
+                  type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
+              }
           },
-          indicator: [
-            { name: '文本', max: 10000 },
-            { name: '文献', max: 20000 },
-            { name: '医学书籍', max: 20000 },
-            { name: '指南', max: 20000 },
-            { name: '药品说明书', max: 20000 },
-            { name: '诊断报告', max: 20000 }
+          legend: {
+              data: ['电子文档', '文本数据']
+          },
+          grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+          },
+          xAxis: {
+              type: 'value'
+          },
+          yAxis: {
+              type: 'category',
+              data: [ '占比']
+          },
+          series: [
+              {
+                  name: '电子文档',
+                  type: 'bar',
+                  stack: 'total',
+                  label: {
+                      show: true
+                  },
+                  emphasis: {
+                      focus: 'series'
+                  },
+                  data: [3]
+              },
+              {
+                  name: '文本数据',
+                  type: 'bar',
+                  stack: 'total',
+                  label: {
+                      show: true
+                  },
+                  emphasis: {
+                      focus: 'series'
+                  },
+                  data: [1]
+              },
+              
           ]
-        },
-        legend: {
-          left: 'center',
-          bottom: '10',
-          data: ['已标注', '未标注']
-        },
-        series: [{
-          type: 'radar',
-          symbolSize: 0,
-          areaStyle: {
-            normal: {
-              shadowBlur: 13,
-              shadowColor: 'rgba(0,0,0,.2)',
-              shadowOffsetX: 0,
-              shadowOffsetY: 10,
-              opacity: 1
-            }
-          },
-          data: [
-            {
-              value: [5000, 7000, 12000, 11000, 15000, 14000],
-              name: '已标注'
-            },
-            {
-              value: [4000, 9000, 15000, 15000, 13000, 11000],
-              name: '未标注'
-            }
-          ],
-          animationDuration: animationDuration
-        }]
-      })
+      };
+
+      this.chart.setOption(option)
     }
   }
 }

@@ -26,48 +26,27 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="8">
+    <!-- <el-row :gutter="8">
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <!-- <transaction-table /> -->
+        
         <el-card class="box-card1">
           <div class="content-container">
-            <el-select v-model="value" placeholder="请选择" @change="handleChange($event)">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-button type="primary" round>保存数据</el-button>
-            <el-scrollbar style="height:100%" wrap-style="overflow-x:hidden;">
-              {{ targetText }}
-            </el-scrollbar>
+            <el-input v-model="key_input" placeholder="please input keywords"></el-input>
+            <el-input v-model="fileName_input" placeholder="please input fileName"></el-input>
+            <el-input v-model="pageTo_input" placeholder="please input Page you go to"></el-input>
           </div>
         </el-card>
       </el-col>
 
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <!-- <todo-list /> -->
+        
 
         <el-card class="box-card">
           <el-scrollbar style="height:50%" wrap-style="overflow-x:hidden;">
             <div class="box-upload">
-              <el-upload
-                class="upload-demo"
-                action="http://localhost:10088/Upload/addOcrFile"
-                name="img1"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :on-success="handleSuccess"
-                :file-list="fileList"
-                list-type="picture"
-                accept=".png, .jpg"
-                :before-upload="beforeUpload"
-              >
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-              </el-upload>
+              <el-button @click="startSelenium()">
+                search
+              </el-button>
             </div>
           </el-scrollbar>
         </el-card>
@@ -75,7 +54,7 @@
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
         <box-card />
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 
@@ -127,6 +106,9 @@ export default {
   data() {
     return {
       lineChartData: lineChartData.newVisitis,
+      key_input: '',
+      fileName_input: '',
+      pageTo_input: '',
       fileList: [],
       targetText: '',
       value: '',
@@ -146,6 +128,16 @@ export default {
     }
   },
   methods: {
+    startSelenium() {
+      let obj = {}
+      const url = 'http://localhost:10088/selenium/startSelenium'
+      obj.keyword = this.key_input
+      obj.pageTo = this.pageTo_input
+      obj.fileName = this.fileName_input
+      axios.post(url, obj).then((response) => {
+        console.log(response)
+      })
+    },
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
     },
